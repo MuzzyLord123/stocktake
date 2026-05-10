@@ -21,1765 +21,27 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0d0d0f;
-    --bg-1: #16161a;
-    --bg-2: #1d1d22;
-    --bg-3: #26262d;
-    --bg-4: #33333c;
-    --line: #2a2a32;
-    --line-2: #3a3a44;
-    --text: #e8e8ec;
-    --text-dim: #9a9aa3;
-    --text-faint: #65656d;
-    --amber: #ffb000;
-    --amber-dim: #b87f00;
-    --amber-soft: rgba(255,176,0,0.12);
-    --green: #4ade80;
-    --green-dim: #16a34a;
-    --green-soft: rgba(74,222,128,0.12);
-    --red: #ef4444;
-    --red-dim: #b91c1c;
-    --red-soft: rgba(239,68,68,0.12);
-    --shadow: 0 8px 24px rgba(0,0,0,0.45);
-  }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
-    font-size: 15px;
-    line-height: 1.4;
-    -webkit-font-smoothing: antialiased;
-    overscroll-behavior-y: none;
-  }
-  body {
-    min-height: 100vh;
-    background:
-      radial-gradient(circle at 20% 0%, rgba(255,176,0,0.04), transparent 40%),
-      radial-gradient(circle at 80% 100%, rgba(74,222,128,0.02), transparent 40%),
-      var(--bg);
-  }
-  .app {
-    max-width: 560px;
-    margin: 0 auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 80px;
-  }
-  .mono { font-family: 'IBM Plex Mono', monospace; }
-
-  /* HEADER */
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px 10px;
-    border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg) 100%);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    backdrop-filter: blur(8px);
-  }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .brand-mark {
-    width: 32px;
-    height: 32px;
-    background: var(--amber);
-    color: #000;
-    display: grid;
-    place-items: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-    font-size: 16px;
-    border-radius: 6px;
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.4) inset, 0 2px 8px rgba(255,176,0,0.25);
-  }
-  .brand-title {
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    font-size: 15px;
-  }
-  .brand-sub {
-    color: var(--text-faint);
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    font-family: 'IBM Plex Mono', monospace;
-    margin-top: 1px;
-  }
-  .initials-pill {
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    padding: 8px 14px;
-    border-radius: 999px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--amber);
-    cursor: pointer;
-    min-height: 38px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.15s;
-  }
-  .initials-pill:active { background: var(--bg-4); }
-  .initials-pill .label {
-    color: var(--text-faint);
-    font-size: 9px;
-    letter-spacing: 0.2em;
-    font-weight: 500;
-  }
-  .initials-pill.unset { color: var(--text-dim); }
-  .initials-pill.unset .label { color: var(--text-faint); }
-
-  /* STATS */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .stat {
-    background: var(--bg-1);
-    padding: 10px 12px;
-    text-align: center;
-  }
-  .stat-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--text-faint);
-    text-transform: uppercase;
-  }
-  .stat-value {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 22px;
-    font-weight: 600;
-    margin-top: 2px;
-    letter-spacing: -0.02em;
-  }
-  .stat.out .stat-value { color: var(--red); }
-  .stat.in .stat-value { color: var(--green); }
-  .stat.total .stat-value { color: var(--amber); }
-
-  /* TABS */
-  .tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: var(--bg-1);
-    border-bottom: 1px solid var(--line);
-    position: sticky;
-    top: 60px;
-    z-index: 40;
-  }
-  .tab {
-    padding: 14px;
-    text-align: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    font-weight: 600;
-    color: var(--text-faint);
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    border-bottom: 2px solid transparent;
-    transition: all 0.15s;
-  }
-  .tab.active {
-    color: var(--amber);
-    border-bottom-color: var(--amber);
-    background: linear-gradient(180deg, transparent, var(--amber-soft));
-  }
-
-  /* CONTENT */
-  .view {
-    padding: 16px;
-    display: none;
-  }
-  .view.active { display: block; }
-
-  /* MODE TOGGLE */
-  .mode-toggle {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: var(--bg-2);
-    border-radius: 12px;
-    padding: 4px;
-    position: relative;
-    border: 1px solid var(--line);
-    margin-bottom: 16px;
-    overflow: hidden;
-  }
-  .mode-slider {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: calc(50% - 4px);
-    height: calc(100% - 8px);
-    border-radius: 9px;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
-    background: var(--red);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  }
-  .mode-toggle.in .mode-slider {
-    transform: translateX(100%);
-    background: var(--green);
-  }
-  .mode-btn {
-    position: relative;
-    z-index: 2;
-    padding: 14px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.16em;
-    background: transparent;
-    border: none;
-    color: var(--text-dim);
-    cursor: pointer;
-    transition: color 0.2s;
-    min-height: 50px;
-  }
-  .mode-toggle.out .mode-btn.out,
-  .mode-toggle.in .mode-btn.in {
-    color: #000;
-  }
-
-  /* SECTION */
-  .section {
-    margin-bottom: 18px;
-  }
-  .section-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    color: var(--text-faint);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .section-label .dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--amber);
-  }
-
-  /* LOCATION PICKER */
-  .loc-picker {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 8px;
-    align-items: stretch;
-  }
-  .loc-prefix {
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    border-radius: 10px;
-    width: 52px;
-    display: grid;
-    place-items: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--amber);
-  }
-  .loc-num {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 24px;
-    font-weight: 600;
-    text-align: center;
-    padding: 0 8px;
-    min-width: 0;
-    width: 100%;
-    height: 56px;
-    -moz-appearance: textfield;
-  }
-  .loc-num::-webkit-outer-spin-button,
-  .loc-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .loc-num:focus {
-    outline: none;
-    border-color: var(--amber);
-    background: var(--bg-3);
-  }
-  .loc-letters {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 10px;
-    padding: 4px;
-    width: 144px;
-  }
-  .loc-letter {
-    background: transparent;
-    border: none;
-    color: var(--text-dim);
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-    font-size: 18px;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: all 0.15s;
-    min-height: 46px;
-    width: 42px;
-  }
-  .loc-letter.active {
-    background: var(--amber);
-    color: #000;
-    box-shadow: 0 2px 6px rgba(255,176,0,0.3);
-  }
-  .loc-display {
-    margin-top: 8px;
-    text-align: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--text-faint);
-    letter-spacing: 0.1em;
-  }
-  .loc-display .val { color: var(--amber); font-weight: 600; }
-
-  /* CHIPS */
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .chip {
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    color: var(--text-dim);
-    padding: 6px 11px;
-    border-radius: 999px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    min-height: 30px;
-    display: inline-flex;
-    align-items: center;
-  }
-  .chip:active {
-    background: var(--bg-3);
-    color: var(--amber);
-    border-color: var(--amber-dim);
-  }
-  .chips-empty {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--text-faint);
-    font-style: italic;
-  }
-
-  /* CODE INPUT */
-  .code-input {
-    width: 100%;
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 10px;
-    color: var(--amber);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 22px;
-    font-weight: 600;
-    padding: 14px 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    height: 56px;
-    text-align: center;
-  }
-  .code-input:focus {
-    outline: none;
-    border-color: var(--amber);
-    background: var(--bg-3);
-    box-shadow: 0 0 0 3px var(--amber-soft);
-  }
-  .code-input::placeholder { color: var(--text-faint); letter-spacing: 0.15em; font-size: 14px; }
-
-  /* QTY */
-  .qty {
-    display: grid;
-    grid-template-columns: 56px 1fr 56px;
-    gap: 8px;
-  }
-  .qty-btn {
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    color: var(--amber);
-    border-radius: 10px;
-    font-size: 28px;
-    font-weight: 600;
-    cursor: pointer;
-    height: 56px;
-    transition: all 0.1s;
-    font-family: 'IBM Plex Mono', monospace;
-    line-height: 1;
-  }
-  .qty-btn:active { background: var(--bg-4); transform: scale(0.96); }
-  .qty-input {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 24px;
-    font-weight: 600;
-    text-align: center;
-    height: 56px;
-    -moz-appearance: textfield;
-  }
-  .qty-input::-webkit-outer-spin-button,
-  .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-  .qty-input:focus {
-    outline: none;
-    border-color: var(--amber);
-    background: var(--bg-3);
-  }
-
-  /* NOTES */
-  .notes-toggle {
-    background: transparent;
-    border: 1px dashed var(--line-2);
-    color: var(--text-dim);
-    padding: 10px;
-    width: 100%;
-    border-radius: 10px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .notes-toggle:active { background: var(--bg-2); }
-  .notes-area {
-    display: none;
-    margin-top: 8px;
-  }
-  .notes-area.open { display: block; }
-  .notes-input {
-    width: 100%;
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 14px;
-    padding: 12px;
-    resize: vertical;
-    min-height: 70px;
-  }
-  .notes-input:focus {
-    outline: none;
-    border-color: var(--amber);
-    background: var(--bg-3);
-  }
-
-  /* SUBMIT */
-  .submit-btn {
-    width: 100%;
-    padding: 18px;
-    border-radius: 12px;
-    border: none;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-    font-size: 15px;
-    letter-spacing: 0.2em;
-    cursor: pointer;
-    color: #000;
-    transition: all 0.15s;
-    margin-top: 16px;
-    min-height: 60px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  }
-  .submit-btn.out { background: var(--red); }
-  .submit-btn.in { background: var(--green); }
-  .submit-btn:active { transform: scale(0.98); filter: brightness(1.1); }
-  .submit-btn:disabled { opacity: 0.5; filter: grayscale(0.5); cursor: not-allowed; }
-
-  /* UNDO BAR */
-  .undo-bar {
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-left: 3px solid var(--amber);
-    padding: 10px 14px;
-    border-radius: 8px;
-    margin-top: 12px;
-    animation: slideIn 0.2s ease;
-  }
-  .undo-bar.visible { display: flex; }
-  .undo-text {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--text-dim);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .undo-text strong { color: var(--text); font-weight: 600; }
-  .undo-btn {
-    background: transparent;
-    border: 1px solid var(--amber-dim);
-    color: var(--amber);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    font-weight: 600;
-    cursor: pointer;
-    flex-shrink: 0;
-    margin-left: 10px;
-  }
-  .undo-btn:active { background: var(--amber-soft); }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* DIVIDER */
-  .divider {
-    height: 1px;
-    background: var(--line);
-    margin: 24px 0 20px;
-    position: relative;
-  }
-  .divider::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 40px;
-    height: 1px;
-    background: var(--amber);
-  }
-
-  /* LOG */
-  .log-controls {
-    display: grid;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .search-input {
-    width: 100%;
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    padding: 10px 14px;
-    min-height: 42px;
-  }
-  .search-input:focus {
-    outline: none;
-    border-color: var(--amber);
-  }
-  .search-input::placeholder { color: var(--text-faint); }
-
-  .filter-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  .filter-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 3px;
-  }
-  .filter-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-dim);
-    padding: 8px;
-    border-radius: 5px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    font-weight: 600;
-    cursor: pointer;
-    min-height: 34px;
-    text-transform: uppercase;
-  }
-  .filter-btn.active {
-    background: var(--bg-4);
-    color: var(--amber);
-  }
-
-  /* LOG TOTAL */
-  .log-total {
-    display: none;
-    background: var(--bg-1);
-    border: 1px solid var(--line-2);
-    border-left: 3px solid var(--amber);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 10px;
-    animation: slideIn 0.2s ease;
-  }
-  .log-total.visible { display: block; }
-  .lt-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-  }
-  .lt-cell {
-    text-align: center;
-    padding: 2px 4px;
-  }
-  .lt-lbl {
-    display: block;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.16em;
-    color: var(--text-faint);
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-  .lt-val {
-    display: block;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .lt-cell.in .lt-val { color: var(--green); }
-  .lt-cell.out .lt-val { color: var(--red); }
-  .lt-cell.net .lt-val.pos { color: var(--green); }
-  .lt-cell.net .lt-val.neg { color: var(--red); }
-  .lt-cell.net .lt-val.zero { color: var(--text-dim); }
-  .lt-cell.entries .lt-val { color: var(--amber); }
-  .lt-scope {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    color: var(--text-faint);
-    text-align: center;
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid var(--line);
-    text-transform: uppercase;
-  }
-
-  /* LOG LIST */
-  .log-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .log-item {
-    background: var(--bg-1);
-    border: 1px solid var(--line);
-    border-left: 3px solid var(--line-2);
-    border-radius: 8px;
-    padding: 10px 12px;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 10px;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.1s;
-  }
-  .log-item:active { background: var(--bg-2); }
-  .log-item.out { border-left-color: var(--red); }
-  .log-item.in { border-left-color: var(--green); }
-  .log-action {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 14px;
-    font-weight: 700;
-    width: 24px;
-    text-align: center;
-  }
-  .log-item.out .log-action { color: var(--red); }
-  .log-item.in .log-action { color: var(--green); }
-  .log-main {
-    min-width: 0;
-    overflow: hidden;
-  }
-  .log-line1 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    display: flex;
-    gap: 8px;
-    align-items: baseline;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .log-loc {
-    color: var(--amber);
-    font-weight: 700;
-  }
-  .log-code {
-    color: var(--text);
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .log-line2 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--text-faint);
-    margin-top: 2px;
-    letter-spacing: 0.06em;
-  }
-  .log-line2 .note {
-    color: var(--text-dim);
-    font-style: italic;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 11px;
-  }
-  .log-qty {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    text-align: right;
-    min-width: 36px;
-  }
-  .log-item.out .log-qty { color: var(--red); }
-  .log-item.in .log-qty { color: var(--green); }
-  .empty-log {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--text-faint);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.1em;
-    border: 1px dashed var(--line-2);
-    border-radius: 10px;
-  }
-
-  /* SUMMARY */
-  .summary-controls {
-    display: grid;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  .group-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .group-item {
-    background: var(--bg-1);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 12px 14px;
-    display: grid;
-    grid-template-columns: 1fr auto auto auto;
-    gap: 12px;
-    align-items: center;
-  }
-  .group-key {
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-    font-size: 14px;
-    color: var(--amber);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .group-stat {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center;
-    min-width: 36px;
-  }
-  .group-stat .lbl {
-    display: block;
-    font-size: 8px;
-    letter-spacing: 0.18em;
-    color: var(--text-faint);
-    margin-bottom: 1px;
-    font-weight: 500;
-  }
-  .group-stat.in .val { color: var(--green); }
-  .group-stat.out .val { color: var(--red); }
-  .group-stat.net .val.pos { color: var(--green); }
-  .group-stat.net .val.neg { color: var(--red); }
-  .group-stat.net .val.zero { color: var(--text-faint); }
-
-  /* FOOTER */
-  .footer {
-    margin-top: auto;
-    padding: 16px;
-    border-top: 1px solid var(--line);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    background: var(--bg-1);
-  }
-  .footer-btn {
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    color: var(--text-dim);
-    padding: 12px;
-    border-radius: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    font-weight: 600;
-    cursor: pointer;
-    min-height: 42px;
-    text-transform: uppercase;
-  }
-  .footer-btn:active { background: var(--bg-4); }
-  .footer-btn.danger { color: var(--red); border-color: rgba(239,68,68,0.25); }
-  .footer-btn.danger:active { background: var(--red-soft); }
-
-  /* MODAL */
-  .modal-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.65);
-    z-index: 100;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0;
-    backdrop-filter: blur(4px);
-  }
-  .modal-backdrop.open { display: flex; }
-  .modal {
-    background: var(--bg-1);
-    border-top: 1px solid var(--line-2);
-    border-radius: 16px 16px 0 0;
-    width: 100%;
-    max-width: 560px;
-    padding: 18px;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-  }
-  @keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-  }
-  .modal-handle {
-    width: 36px;
-    height: 4px;
-    background: var(--line-2);
-    border-radius: 2px;
-    margin: -6px auto 14px;
-  }
-  .modal-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin: 0 0 14px;
-    font-weight: 700;
-  }
-  .modal-body { display: grid; gap: 14px; }
-  .modal-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 12px;
-  }
-  .modal-btn {
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid var(--line-2);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    font-weight: 700;
-    cursor: pointer;
-    min-height: 50px;
-    text-transform: uppercase;
-  }
-  .modal-btn.primary {
-    background: var(--amber);
-    color: #000;
-    border-color: var(--amber);
-  }
-  .modal-btn.danger {
-    background: transparent;
-    color: var(--red);
-    border-color: rgba(239,68,68,0.4);
-  }
-  .modal-btn.secondary {
-    background: var(--bg-3);
-    color: var(--text);
-  }
-  .modal-btn:active { transform: scale(0.98); filter: brightness(1.1); }
-  .modal-btn:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-    filter: grayscale(0.6);
-  }
-  .modal-btn:disabled:active { transform: none; filter: grayscale(0.6); }
-
-  /* TOAST */
-  .toast-wrap {
-    position: fixed;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 400;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    pointer-events: none;
-    width: calc(100% - 32px);
-    max-width: 400px;
-  }
-  .toast {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-left: 3px solid var(--amber);
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--text);
-    animation: toastIn 0.25s ease;
-    box-shadow: var(--shadow);
-    text-align: center;
-    letter-spacing: 0.04em;
-  }
-  .toast.in { border-left-color: var(--green); }
-  .toast.out { border-left-color: var(--red); }
-  .toast.warn { border-left-color: var(--amber); }
-  .toast.fade { animation: toastOut 0.3s ease forwards; }
-  @keyframes toastIn {
-    from { opacity: 0; transform: translateY(-12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes toastOut {
-    from { opacity: 1; }
-    to { opacity: 0; transform: translateY(-12px); }
-  }
-
-  /* MODAL FIELDS */
-  .field {
-    display: grid;
-    gap: 6px;
-  }
-  .field-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    color: var(--text-faint);
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .field-input {
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 16px;
-    padding: 12px;
-    width: 100%;
-  }
-  .field-input:focus {
-    outline: none;
-    border-color: var(--amber);
-    background: var(--bg-3);
-  }
-
-  /* ACTION SELECTOR (modal) */
-  .action-select {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 8px;
-    padding: 4px;
-  }
-  .action-select-btn {
-    padding: 12px;
-    border-radius: 6px;
-    border: none;
-    background: transparent;
-    color: var(--text-dim);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    font-weight: 700;
-    cursor: pointer;
-    min-height: 44px;
-  }
-  .action-select-btn.active.out {
-    background: var(--red);
-    color: #000;
-  }
-  .action-select-btn.active.in {
-    background: var(--green);
-    color: #000;
-  }
-
-  /* FOOTER STAMP */
-  .stamp {
-    text-align: center;
-    color: var(--text-faint);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.25em;
-    padding: 8px;
-    grid-column: 1 / -1;
-  }
-
-  /* SUGGESTIONS (autocomplete) */
-  .suggestions {
-    display: none;
-    background: var(--bg-2);
-    border: 1px solid var(--line-2);
-    border-radius: 10px;
-    margin-top: 8px;
-    max-height: 260px;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-  }
-  .suggestions.open { display: block; }
-  .suggestion-item {
-    padding: 10px 14px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--line);
-    transition: background 0.1s;
-  }
-  .suggestion-item:last-child { border-bottom: none; }
-  .suggestion-item:active,
-  .suggestion-item.focus { background: var(--bg-3); }
-  .suggestion-code {
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--amber);
-    letter-spacing: 0.04em;
-  }
-  .suggestion-desc {
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 2px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    line-height: 1.3;
-  }
-  .suggestion-mark {
-    color: var(--text);
-    background: var(--amber-soft);
-    border-radius: 2px;
-    padding: 0 2px;
-  }
-
-  /* LOG BADGES */
-  .badge {
-    display: inline-block;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    font-weight: 700;
-    color: #000;
-    padding: 2px 5px;
-    border-radius: 3px;
-    vertical-align: middle;
-    margin-left: 6px;
-    line-height: 1;
-  }
-  .badge.cat { background: var(--amber); }
-  .badge.fmt { background: #ff8c1a; }
-  .log-line2 .desc {
-    color: var(--text-dim);
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 11px;
-  }
-
-  /* CATALOGUE SETTINGS BLOCK */
-  .cat-block {
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 12px;
-  }
-  .cat-status-text {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    color: var(--text-faint);
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .cat-status-text.loaded { color: var(--green); }
-  .cat-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  .cat-btn {
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    color: var(--amber);
-    padding: 12px;
-    border-radius: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    font-weight: 700;
-    cursor: pointer;
-    min-height: 44px;
-    text-transform: uppercase;
-  }
-  .cat-btn:active { background: var(--bg-4); }
-  .cat-btn.danger { color: var(--red); border-color: rgba(239,68,68,0.3); }
-  .cat-btn.danger:active { background: var(--red-soft); }
-  .cat-btn.danger.priming { background: var(--red); color: #000; border-color: var(--red); }
-  .cat-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* FILE PICK */
-  .file-pick {
-    display: block;
-    background: var(--bg-2);
-    border: 1px dashed var(--line-2);
-    border-radius: 10px;
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    color: var(--text-dim);
-    font-weight: 600;
-    transition: all 0.15s;
-  }
-  .file-pick:active { background: var(--bg-3); border-color: var(--amber); color: var(--amber); }
-  .file-name {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--green);
-    margin-top: 6px;
-    text-align: center;
-    min-height: 14px;
-    letter-spacing: 0.06em;
-  }
-  .field-help {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    color: var(--text-faint);
-    letter-spacing: 0.08em;
-    margin-top: 4px;
-    line-height: 1.4;
-  }
-  .cat-preview {
-    display: none;
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-left: 3px solid var(--amber);
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.08em;
-  }
-  .cat-preview.show { display: block; }
-  .cat-preview strong { color: var(--amber); font-weight: 700; }
-
-  /* SCAN BUTTON IN INPUT */
-  .code-field-wrap {
-    position: relative;
-    min-width: 0;
-  }
-  .code-field-wrap .code-input { padding-right: 60px; }
-  .scan-btn {
-    position: absolute;
-    right: 6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    border-radius: 8px;
-    color: var(--amber);
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    transition: all 0.15s;
-  }
-  .scan-btn:active { background: var(--bg-4); }
-  .scan-btn[hidden] { display: none; }
-  body.glove .scan-btn { width: 52px; height: 52px; }
-  body.glove .code-field-wrap .code-input { padding-right: 68px; }
-
-  /* SCANNER OVERLAY */
-  .scanner-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 300;
-    background: #000;
-    overflow: hidden;
-  }
-  .scanner-overlay.open { display: block; }
-  .scanner-overlay video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    background: #000;
-  }
-  .scanner-frame {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: min(80vw, 420px);
-    height: min(40vh, 240px);
-    pointer-events: none;
-    z-index: 2;
-  }
-  .scanner-frame .corner {
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--amber);
-    box-shadow: 0 0 12px rgba(255,176,0,0.4);
-  }
-  .scanner-frame .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; border-radius: 8px 0 0 0; }
-  .scanner-frame .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; border-radius: 0 8px 0 0; }
-  .scanner-frame .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; border-radius: 0 0 0 8px; }
-  .scanner-frame .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; border-radius: 0 0 8px 0; }
-  .scan-line {
-    position: absolute;
-    left: 6%;
-    right: 6%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #ff4040 18%, #ff4040 82%, transparent);
-    box-shadow: 0 0 14px rgba(255,64,64,0.85), 0 0 30px rgba(255,64,64,0.4);
-    animation: scan-sweep 2.2s ease-in-out infinite;
-    top: 50%;
-  }
-  @keyframes scan-sweep {
-    0%, 100% { top: 8%; }
-    50% { top: 92%; }
-  }
-  .scanner-overlay::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(180deg, rgba(0,0,0,0.55) 0%, transparent 18%, transparent 82%, rgba(0,0,0,0.55) 100%);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .scanner-top {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 16px;
-    z-index: 3;
-    gap: 8px;
-  }
-  .scanner-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 16px 16px calc(20px + env(safe-area-inset-bottom, 0px));
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-    z-index: 3;
-  }
-  .scanner-btn {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.55);
-    border: 1px solid rgba(255,255,255,0.22);
-    color: #fff;
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    padding: 0;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: all 0.15s;
-  }
-  .scanner-btn:active { background: rgba(255,255,255,0.18); }
-  .scanner-btn[hidden] { display: none; }
-  .scanner-btn.on {
-    background: var(--amber);
-    color: #000;
-    border-color: var(--amber);
-  }
-  .scanner-counter {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--amber);
-    letter-spacing: 0.18em;
-    font-weight: 700;
-    background: rgba(0,0,0,0.55);
-    padding: 9px 14px;
-    border-radius: 999px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,176,0,0.3);
-  }
-  .scanner-counter.hidden { display: none; }
-  .scanner-continuous {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(0,0,0,0.6);
-    padding: 10px 16px;
-    border-radius: 999px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.15);
-  }
-  .scanner-continuous-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    color: #fff;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  .scanner-hint {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    color: #fff;
-    font-weight: 500;
-    text-align: center;
-    background: rgba(0,0,0,0.65);
-    padding: 9px 16px;
-    border-radius: 8px;
-    text-transform: uppercase;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    transition: color 0.2s, background 0.2s;
-  }
-  .scanner-hint.warn {
-    color: #fff;
-    background: rgba(239,68,68,0.92);
-  }
-  .scanner-error {
-    display: none;
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    background: rgba(0,0,0,0.96);
-    align-items: center;
-    justify-content: center;
-    padding: 30px;
-    text-align: center;
-  }
-  .scanner-error.show { display: flex; }
-  .scanner-error-content {
-    max-width: 360px;
-    color: #fff;
-    font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.55;
-  }
-  .scanner-error-content h4 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.18em;
-    color: var(--red);
-    margin: 0 0 14px;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  .scanner-error-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 18px;
-  }
-  .scanner-error-actions button {
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    color: #fff;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    cursor: pointer;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-  .scanner-error-actions button.primary {
-    background: var(--amber);
-    color: #000;
-    border-color: var(--amber);
-  }
-  .scanner-loading {
-    display: none;
-    position: absolute;
-    inset: 0;
-    z-index: 4;
-    background: rgba(0,0,0,0.7);
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-  .scanner-loading.show { display: flex; }
-
-  /* iOS SAFE AREA */
-  .header { padding-top: calc(14px + env(safe-area-inset-top, 0px)); }
-  .footer { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
-  .app { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
-
-  /* HEADER RIGHT GROUP */
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .header-btn {
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    color: var(--text-dim);
-    width: 38px;
-    height: 38px;
-    border-radius: 999px;
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    transition: all 0.15s;
-    padding: 0;
-  }
-  .header-btn:active { background: var(--bg-4); color: var(--amber); }
-  .header-btn svg { display: block; }
-
-  /* OFFLINE INDICATOR */
-  .net-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0 4px;
-    height: 38px;
-  }
-  .net-dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 6px rgba(74,222,128,0.6);
-    transition: background 0.2s, box-shadow 0.2s;
-  }
-  .net-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.18em;
-    font-weight: 700;
-    color: var(--red);
-    display: none;
-  }
-  .net-status.offline .net-dot {
-    background: var(--red);
-    box-shadow: 0 0 8px rgba(239,68,68,0.7);
-    animation: pulse-dot 1.4s ease-in-out infinite;
-  }
-  .net-status.offline .net-label { display: inline; }
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.55; transform: scale(0.85); }
-  }
-
-  /* CODE INPUT ROW (with mic) */
-  .code-row {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    align-items: stretch;
-  }
-  body.voice-on .code-row { grid-template-columns: 1fr 56px; }
-  .mic-btn {
-    display: none;
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    color: var(--amber);
-    border-radius: 10px;
-    cursor: pointer;
-    height: 56px;
-    place-items: center;
-    transition: all 0.15s;
-    padding: 0;
-  }
-  body.voice-on .mic-btn { display: grid; }
-  .mic-btn:active { background: var(--bg-4); }
-  .mic-btn.listening {
-    background: var(--red);
-    border-color: var(--red);
-    color: #000;
-    animation: pulse-mic 1s ease-in-out infinite;
-  }
-  @keyframes pulse-mic {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.55); }
-    50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
-  }
-  .voice-overlay {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 6px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    color: var(--red);
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .voice-overlay.active { display: flex; }
-  .voice-overlay::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--red);
-    animation: pulse-dot 1s infinite;
-  }
-
-  /* SETTINGS */
-  .settings-group {
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 0 14px;
-  }
-  .setting-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .setting-row:last-child { border-bottom: none; }
-  .setting-info { flex: 1; min-width: 0; }
-  .setting-name {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    font-weight: 700;
-    color: var(--text);
-  }
-  .setting-desc {
-    font-size: 11px;
-    color: var(--text-faint);
-    margin-top: 3px;
-    line-height: 1.35;
-  }
-  .toggle {
-    width: 52px;
-    height: 30px;
-    border-radius: 999px;
-    background: var(--bg-3);
-    border: 1px solid var(--line-2);
-    position: relative;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: background 0.2s, border-color 0.2s;
-    padding: 0;
-  }
-  .toggle .toggle-knob {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--text-dim);
-    transition: transform 0.2s, background 0.2s;
-  }
-  .toggle[aria-pressed="true"] {
-    background: var(--amber);
-    border-color: var(--amber);
-  }
-  .toggle[aria-pressed="true"] .toggle-knob {
-    background: #000;
-    transform: translateX(22px);
-  }
-  .init-status {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    margin-top: 4px;
-    height: 12px;
-    font-weight: 600;
-  }
-  .init-status.ok { color: var(--green); }
-  .init-status.warn { color: var(--amber); }
-
-  /* GLOVE MODE */
-  body.glove .submit-btn { min-height: 72px; padding: 22px; font-size: 16px; }
-  body.glove .qty-btn { height: 64px; font-size: 32px; }
-  body.glove .qty-input { height: 64px; font-size: 28px; }
-  body.glove .qty { grid-template-columns: 64px 1fr 64px; }
-  body.glove .loc-num { height: 64px; font-size: 28px; }
-  body.glove .loc-letter { min-height: 56px; font-size: 22px; width: auto; }
-  body.glove .loc-letters { width: 168px; }
-  body.glove .loc-prefix { font-size: 26px; width: 60px; }
-  body.glove .code-input { height: 64px; font-size: 26px; padding: 14px; }
-  body.glove .mic-btn { height: 64px; }
-  body.glove.voice-on .code-row { grid-template-columns: 1fr 64px; }
-  body.glove .chip { min-height: 40px; padding: 9px 14px; font-size: 13px; }
-  body.glove .filter-btn { min-height: 44px; font-size: 12px; padding: 10px; }
-  body.glove .tab { padding: 18px; font-size: 13px; }
-  body.glove .footer-btn { min-height: 56px; font-size: 12px; padding: 16px; }
-  body.glove .mode-btn { min-height: 60px; font-size: 14px; padding: 18px; }
-  body.glove .stat { padding: 14px 12px; }
-  body.glove .stat-value { font-size: 26px; }
-  body.glove .log-item { padding: 14px 14px; gap: 14px; }
-  body.glove .group-item { padding: 16px; }
-  body.glove .header-btn { width: 46px; height: 46px; }
-  body.glove .section { margin-bottom: 22px; }
-  body.glove .toggle { width: 60px; height: 34px; }
-  body.glove .toggle .toggle-knob { width: 28px; height: 28px; }
-  body.glove .toggle[aria-pressed="true"] .toggle-knob { transform: translateX(26px); }
-  body.glove .setting-row { padding: 16px 0; }
-  body.glove .field-input { font-size: 18px; padding: 14px; }
-  body.glove .modal-btn { min-height: 60px; font-size: 13px; }
-
-  /* HIGH CONTRAST */
-  body.contrast {
-    --bg: #000;
-    --bg-1: #000;
-    --bg-2: #050505;
-    --bg-3: #181818;
-    --bg-4: #2a2a2a;
-    --line: #555;
-    --line-2: #888;
-    --text: #fff;
-    --text-dim: #f0f0f0;
-    --text-faint: #b8b8b8;
-    --amber: #ffd700;
-    --amber-dim: #d4ae00;
-    --amber-soft: rgba(255,215,0,0.18);
-    --green: #00ff88;
-    --red: #ff4040;
-    --green-soft: rgba(0,255,136,0.16);
-    --red-soft: rgba(255,64,64,0.16);
-  }
-  body.contrast .header,
-  body.contrast .stats,
-  body.contrast .tabs,
-  body.contrast .footer { border-bottom-width: 2px; border-top-width: 2px; }
-  body.contrast .log-item,
-  body.contrast .group-item,
-  body.contrast .filter-group,
-  body.contrast .settings-group,
-  body.contrast .loc-num,
-  body.contrast .loc-letters,
-  body.contrast .code-input,
-  body.contrast .qty-input,
-  body.contrast .qty-btn,
-  body.contrast .field-input,
-  body.contrast .notes-input,
-  body.contrast .search-input,
-  body.contrast .footer-btn,
-  body.contrast .header-btn,
-  body.contrast .modal-btn,
-  body.contrast .mode-toggle,
-  body.contrast .mic-btn { border-width: 2px; }
-  body.contrast .log-item.in,
-  body.contrast .log-item.out { border-left-width: 5px; }
-  body.contrast .submit-btn { font-weight: 800; box-shadow: 0 0 0 2px #fff inset; }
-  body.contrast .body-bg { background: #000; }
-  body.contrast { background: #000; }
-
-  /* LARGER TEXT */
-  body.large-text { font-size: 17px; }
-  body.large-text .stat-value { font-size: 26px; }
-  body.large-text .stat-label { font-size: 10px; }
-  body.large-text .code-input { font-size: 26px; }
-  body.large-text .loc-num { font-size: 28px; }
-  body.large-text .qty-input { font-size: 28px; }
-  body.large-text .submit-btn { font-size: 17px; }
-  body.large-text .log-line1 { font-size: 14px; }
-  body.large-text .log-line2 { font-size: 12px; }
-  body.large-text .log-qty { font-size: 20px; }
-  body.large-text .group-key { font-size: 16px; }
-  body.large-text .field-input { font-size: 18px; }
-  body.large-text .notes-input { font-size: 16px; }
-  body.large-text .chip { font-size: 13px; }
-  body.large-text .tab { font-size: 13px; }
-  body.large-text .filter-btn { font-size: 12px; }
-  body.large-text .footer-btn { font-size: 12px; }
-  body.large-text .section-label { font-size: 11px; }
-  body.large-text .mode-btn { font-size: 14px; }
-  body.large-text .setting-name { font-size: 13px; }
-  body.large-text .setting-desc { font-size: 12px; }
-  body.large-text .modal-title { font-size: 14px; }
-  body.large-text .brand-title { font-size: 16px; }
-  body.large-text .brand-sub { font-size: 11px; }
-</style>
+<link rel="stylesheet" href="./stocktake.css">
+<script src="./stocktake.js" defer></script>
 </head>
 <body>
 <div class="app">
 
   <header class="header">
     <div class="brand">
-      <div class="brand-mark">S</div>
+      <div class="brand-mark" aria-hidden="true">S</div>
       <div>
         <div class="brand-title">STOCKTAKE</div>
         <div class="brand-sub" id="brandSub">WAREHOUSE LOG // V1</div>
       </div>
     </div>
     <div class="header-right">
-      <div class="net-status" id="netStatus" title="Online">
-        <span class="net-dot"></span>
+      <div class="net-status" id="netStatus" title="Online" role="status" aria-live="polite">
+        <span class="net-dot" aria-hidden="true"></span>
         <span class="net-label">OFFLINE</span>
       </div>
-      <button class="header-btn" id="settingsBtn" aria-label="Settings" title="Settings">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <button class="header-btn" id="settingsBtn" type="button" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
         </svg>
@@ -1787,64 +49,66 @@
     </div>
   </header>
 
-  <div class="stats">
+  <div class="stats" role="group" aria-label="Today's totals">
     <div class="stat out">
       <div class="stat-label">OUT TODAY</div>
-      <div class="stat-value" id="statOut">0</div>
+      <div class="stat-value" id="statOut" aria-live="polite">0</div>
     </div>
     <div class="stat in">
       <div class="stat-label">IN TODAY</div>
-      <div class="stat-value" id="statIn">0</div>
+      <div class="stat-value" id="statIn" aria-live="polite">0</div>
     </div>
     <div class="stat total">
       <div class="stat-label">ENTRIES</div>
-      <div class="stat-value" id="statEntries">0</div>
+      <div class="stat-value" id="statEntries" aria-live="polite">0</div>
     </div>
   </div>
 
-  <nav class="tabs">
-    <button class="tab active" data-tab="entry">ENTRY</button>
-    <button class="tab" data-tab="summary">SUMMARY</button>
+  <nav class="tabs" role="tablist" aria-label="Views">
+    <button class="tab active" type="button" role="tab" data-tab="entry" aria-label="Entry view">ENTRY</button>
+    <button class="tab" type="button" role="tab" data-tab="summary" aria-label="Summary view">SUMMARY</button>
   </nav>
 
   <!-- ENTRY VIEW -->
-  <main class="view active" id="view-entry">
+  <main class="view active" id="view-entry" role="tabpanel" aria-label="Entry">
 
-    <div class="mode-toggle out" id="modeToggle">
-      <div class="mode-slider"></div>
-      <button class="mode-btn out" data-mode="out">TAKING OUT</button>
-      <button class="mode-btn in" data-mode="in">ADDING IN</button>
+    <div class="mode-toggle out" id="modeToggle" role="group" aria-label="Direction">
+      <div class="mode-slider" aria-hidden="true"></div>
+      <button class="mode-btn out" type="button" data-mode="out" aria-label="Mode: taking out">TAKING OUT</button>
+      <button class="mode-btn in" type="button" data-mode="in" aria-label="Mode: adding in">ADDING IN</button>
     </div>
 
     <div class="section">
-      <div class="section-label"><span class="dot"></span>LOCATION</div>
-      <div class="loc-picker">
-        <div class="loc-prefix">W</div>
+      <div class="section-label" id="locLabel"><span class="dot" aria-hidden="true"></span>LOCATION</div>
+      <div class="loc-picker" role="group" aria-labelledby="locLabel">
+        <div class="loc-prefix" aria-hidden="true">W</div>
+        <label class="sr-only" for="locNum">Location number</label>
         <input class="loc-num" id="locNum" type="number" min="1" max="99" placeholder="00" inputmode="numeric" pattern="[0-9]*">
-        <div class="loc-letters">
-          <button class="loc-letter" data-letter="A">A</button>
-          <button class="loc-letter" data-letter="B">B</button>
-          <button class="loc-letter" data-letter="C">C</button>
+        <div class="loc-letters" role="group" aria-label="Location row">
+          <button class="loc-letter" type="button" data-letter="A">A</button>
+          <button class="loc-letter" type="button" data-letter="B">B</button>
+          <button class="loc-letter" type="button" data-letter="C">C</button>
         </div>
       </div>
-      <div class="loc-display">CURRENT: <span class="val" id="locDisplay">—</span></div>
-      <div class="chips" id="recentLocs"></div>
+      <div class="loc-display" aria-live="polite">CURRENT: <span class="val" id="locDisplay">—</span></div>
+      <div class="chips" id="recentLocs" aria-label="Recent locations"></div>
     </div>
 
     <div class="section">
-      <div class="section-label"><span class="dot"></span>ITEM CODE</div>
+      <div class="section-label" id="codeLabel"><span class="dot" aria-hidden="true"></span>ITEM CODE</div>
       <div class="code-row">
         <div class="code-field-wrap">
-          <input class="code-input" id="codeInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="SCAN OR TYPE">
-          <button class="scan-btn" id="scanBtn" aria-label="Scan barcode" title="Scan barcode">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <label class="sr-only" for="codeInput">Item code</label>
+          <input class="code-input" id="codeInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="SCAN OR TYPE" aria-labelledby="codeLabel">
+          <button class="scan-btn" id="scanBtn" type="button" aria-label="Scan barcode" title="Scan barcode">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
               <circle cx="12" cy="13" r="4"/>
             </svg>
           </button>
         </div>
-        <button class="mic-btn" id="micBtn" aria-label="Voice input" title="Voice input">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <button class="mic-btn" id="micBtn" type="button" aria-label="Voice input" title="Voice input">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
             <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
             <line x1="12" y1="19" x2="12" y2="23"/>
@@ -1852,54 +116,57 @@
           </svg>
         </button>
       </div>
-      <div class="voice-overlay" id="voiceOverlay">LISTENING&hellip;</div>
-      <div class="suggestions" id="suggestions"></div>
-      <div class="chips" id="recentCodes"></div>
+      <div class="voice-overlay" id="voiceOverlay" role="status" aria-live="polite">LISTENING&hellip;</div>
+      <div class="suggestions" id="suggestions" role="listbox" aria-label="Suggested codes"></div>
+      <div class="chips" id="recentCodes" aria-label="Recent codes"></div>
     </div>
 
     <div class="section">
-      <div class="section-label"><span class="dot"></span>QUANTITY</div>
-      <div class="qty">
-        <button class="qty-btn" id="qtyMinus">−</button>
+      <div class="section-label" id="qtyLabel"><span class="dot" aria-hidden="true"></span>QUANTITY</div>
+      <div class="qty" role="group" aria-labelledby="qtyLabel">
+        <button class="qty-btn" id="qtyMinus" type="button" aria-label="Decrease quantity">−</button>
+        <label class="sr-only" for="qtyInput">Quantity</label>
         <input class="qty-input" id="qtyInput" type="number" min="1" value="1" inputmode="numeric">
-        <button class="qty-btn" id="qtyPlus">+</button>
+        <button class="qty-btn" id="qtyPlus" type="button" aria-label="Increase quantity">+</button>
       </div>
     </div>
 
     <div class="section">
-      <button class="notes-toggle" id="notesToggle">+ ADD NOTE</button>
+      <button class="notes-toggle" id="notesToggle" type="button" aria-expanded="false" aria-controls="notesArea">+ ADD NOTE</button>
       <div class="notes-area" id="notesArea">
+        <label class="sr-only" for="notesInput">Note</label>
         <textarea class="notes-input" id="notesInput" placeholder="Optional note about this entry..."></textarea>
       </div>
     </div>
 
-    <button class="submit-btn out" id="submitBtn">LOG TAKE-OUT</button>
+    <button class="submit-btn out" id="submitBtn" type="button">LOG TAKE-OUT</button>
 
-    <div class="undo-bar" id="undoBar">
+    <div class="undo-bar" id="undoBar" role="status" aria-live="polite">
       <div class="undo-text" id="undoText">Logged.</div>
-      <button class="undo-btn" id="undoBtn">UNDO</button>
+      <button class="undo-btn" id="undoBtn" type="button" aria-label="Undo last action (Ctrl+Z)" title="Undo (Ctrl+Z)">UNDO</button>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider" aria-hidden="true"></div>
 
-    <div class="section-label" style="margin-bottom: 12px;"><span class="dot"></span>ACTIVITY LOG</div>
+    <div class="section-label" style="margin-bottom: 12px;"><span class="dot" aria-hidden="true"></span>ACTIVITY LOG</div>
 
     <div class="log-controls">
+      <label class="sr-only" for="logSearch">Search activity log</label>
       <input class="search-input" id="logSearch" type="text" placeholder="Search code, location, note...">
       <div class="filter-row">
-        <div class="filter-group" id="filterTime">
-          <button class="filter-btn active" data-f="today">TODAY</button>
-          <button class="filter-btn" data-f="all">ALL</button>
+        <div class="filter-group" id="filterTime" role="group" aria-label="Time range">
+          <button class="filter-btn active" type="button" data-f="today" aria-label="Today">TODAY</button>
+          <button class="filter-btn" type="button" data-f="all" aria-label="All time">ALL</button>
         </div>
-        <div class="filter-group" id="filterLoc">
-          <button class="filter-btn active" data-f="all">ALL LOCS</button>
-          <button class="filter-btn" data-f="this">THIS LOC</button>
+        <div class="filter-group" id="filterLoc" role="group" aria-label="Location filter">
+          <button class="filter-btn active" type="button" data-f="all" aria-label="All locations">ALL LOCS</button>
+          <button class="filter-btn" type="button" data-f="this" aria-label="Current location only">THIS LOC</button>
         </div>
       </div>
-      <button class="footer-btn" id="totalBtn" style="margin-top: 2px;">SHOW TOTAL</button>
+      <button class="footer-btn" id="totalBtn" type="button" style="margin-top: 2px;">SHOW TOTAL</button>
     </div>
 
-    <div class="log-total" id="logTotal">
+    <div class="log-total" id="logTotal" aria-live="polite">
       <div class="lt-row">
         <div class="lt-cell in"><span class="lt-lbl">IN</span><span class="lt-val" id="ltIn">+0</span></div>
         <div class="lt-cell out"><span class="lt-lbl">OUT</span><span class="lt-val" id="ltOut">−0</span></div>
@@ -1913,40 +180,41 @@
   </main>
 
   <!-- SUMMARY VIEW -->
-  <main class="view" id="view-summary">
+  <main class="view" id="view-summary" role="tabpanel" aria-label="Summary">
     <div class="summary-controls">
       <div class="filter-row">
-        <div class="filter-group" id="sumGroup">
-          <button class="filter-btn active" data-g="location">BY LOCATION</button>
-          <button class="filter-btn" data-g="code">BY CODE</button>
+        <div class="filter-group" id="sumGroup" role="group" aria-label="Group by">
+          <button class="filter-btn active" type="button" data-g="location" aria-label="Group by location">BY LOCATION</button>
+          <button class="filter-btn" type="button" data-g="code" aria-label="Group by code">BY CODE</button>
         </div>
-        <div class="filter-group" id="sumTime">
-          <button class="filter-btn" data-f="all">ALL TIME</button>
-          <button class="filter-btn active" data-f="today">TODAY</button>
+        <div class="filter-group" id="sumTime" role="group" aria-label="Time range">
+          <button class="filter-btn" type="button" data-f="all" aria-label="All time">ALL TIME</button>
+          <button class="filter-btn active" type="button" data-f="today" aria-label="Today">TODAY</button>
         </div>
       </div>
+      <label class="sr-only" for="sumSearch">Search summary</label>
       <input class="search-input" id="sumSearch" type="text" placeholder="Search...">
     </div>
     <div class="group-list" id="groupList"></div>
   </main>
 
   <footer class="footer">
-    <button class="footer-btn" id="exportBtn">EXPORT CSV</button>
-    <button class="footer-btn danger" id="clearBtn">CLEAR ALL</button>
+    <button class="footer-btn" id="exportBtn" type="button">EXPORT CSV</button>
+    <button class="footer-btn danger" id="clearBtn" type="button">CLEAR ALL</button>
     <div class="stamp" id="stamp">— END OF LOG —</div>
   </footer>
 </div>
 
 <!-- SETTINGS MODAL -->
-<div class="modal-backdrop" id="settingsModal">
+<div class="modal-backdrop" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <h3 class="modal-title">SETTINGS</h3>
+    <div class="modal-handle" aria-hidden="true"></div>
+    <h3 class="modal-title" id="settingsTitle">SETTINGS</h3>
     <div class="modal-body">
       <div class="field">
-        <div class="field-label">USER INITIALS — tagged on every entry</div>
+        <label class="field-label" for="settingsInitials">USER INITIALS — tagged on every entry</label>
         <input class="field-input" id="settingsInitials" type="text" maxlength="6" autocomplete="off" autocapitalize="characters" placeholder="2-6 LETTERS, e.g. AB">
-        <div class="init-status" id="initStatus"></div>
+        <div class="init-status" id="initStatus" aria-live="polite"></div>
       </div>
 
       <div class="settings-group" id="settingsGroup">
@@ -1955,49 +223,56 @@
             <div class="setting-name">GLOVE MODE</div>
             <div class="setting-desc">Larger tap targets and spacing for warehouse gloves</div>
           </div>
-          <button class="toggle" data-key="glove" aria-pressed="false"><span class="toggle-knob"></span></button>
+          <button class="toggle" type="button" data-key="glove" aria-pressed="false" aria-label="Glove mode"><span class="toggle-knob" aria-hidden="true"></span></button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-name">LIGHT THEME</div>
+            <div class="setting-desc">Easier on the eyes outdoors. Off = dark theme.</div>
+          </div>
+          <button class="toggle" type="button" data-key="light" aria-pressed="false" aria-label="Light theme"><span class="toggle-knob" aria-hidden="true"></span></button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">HIGH CONTRAST</div>
             <div class="setting-desc">Pure black/white with thicker borders for bad lighting</div>
           </div>
-          <button class="toggle" data-key="contrast" aria-pressed="false"><span class="toggle-knob"></span></button>
+          <button class="toggle" type="button" data-key="contrast" aria-pressed="false" aria-label="High contrast"><span class="toggle-knob" aria-hidden="true"></span></button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">LARGER TEXT</div>
             <div class="setting-desc">Bumps body fonts two steps up</div>
           </div>
-          <button class="toggle" data-key="largeText" aria-pressed="false"><span class="toggle-knob"></span></button>
+          <button class="toggle" type="button" data-key="largeText" aria-pressed="false" aria-label="Larger text"><span class="toggle-knob" aria-hidden="true"></span></button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">HAPTIC FEEDBACK</div>
             <div class="setting-desc">Vibrate on submit and on errors</div>
           </div>
-          <button class="toggle" data-key="haptic" aria-pressed="true"><span class="toggle-knob"></span></button>
+          <button class="toggle" type="button" data-key="haptic" aria-pressed="true" aria-label="Haptic feedback"><span class="toggle-knob" aria-hidden="true"></span></button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">VOICE CODE ENTRY</div>
             <div class="setting-desc">Microphone next to code input (Web Speech API)</div>
           </div>
-          <button class="toggle" data-key="voice" aria-pressed="false"><span class="toggle-knob"></span></button>
+          <button class="toggle" type="button" data-key="voice" aria-pressed="false" aria-label="Voice code entry"><span class="toggle-knob" aria-hidden="true"></span></button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">SOUND CONFIRMATION</div>
             <div class="setting-desc">Short beep on submit for noisy environments</div>
           </div>
-          <button class="toggle" data-key="sound" aria-pressed="false"><span class="toggle-knob"></span></button>
+          <button class="toggle" type="button" data-key="sound" aria-pressed="false" aria-label="Sound confirmation"><span class="toggle-knob" aria-hidden="true"></span></button>
         </div>
         <div class="setting-row">
           <div class="setting-info">
             <div class="setting-name">STRICT FORMAT VALIDATION</div>
             <div class="setting-desc">Block codes that don't match LLLDDDD (e.g. HKB1234). Off = flag only.</div>
           </div>
-          <button class="toggle" data-key="strictFormat" aria-pressed="false"><span class="toggle-knob"></span></button>
+          <button class="toggle" type="button" data-key="strictFormat" aria-pressed="false" aria-label="Strict format validation"><span class="toggle-knob" aria-hidden="true"></span></button>
         </div>
       </div>
 
@@ -2006,22 +281,32 @@
         <div class="cat-block">
           <div class="cat-status-text" id="catStatus">NO CATALOGUE LOADED</div>
           <div class="cat-actions">
-            <button class="cat-btn" id="catImportBtn">IMPORT</button>
-            <button class="cat-btn danger" id="catClearBtn" disabled>CLEAR</button>
+            <button class="cat-btn" id="catImportBtn" type="button">IMPORT</button>
+            <button class="cat-btn danger" id="catClearBtn" type="button" disabled>CLEAR</button>
           </div>
         </div>
       </div>
 
-      <button class="modal-btn primary" data-close>DONE</button>
+      <div class="field">
+        <div class="field-label">KEYBOARD SHORTCUTS</div>
+        <div class="field-help" style="font-size:11px; line-height:1.7;">
+          <kbd>Enter</kbd> in code → submit ·
+          <kbd>Ctrl</kbd>+<kbd>Z</kbd> → undo ·
+          <kbd>/</kbd> → focus code ·
+          <kbd>Esc</kbd> → close
+        </div>
+      </div>
+
+      <button class="modal-btn primary" type="button" data-close>DONE</button>
     </div>
   </div>
 </div>
 
 <!-- IMPORT CATALOGUE MODAL -->
-<div class="modal-backdrop" id="catImportModal">
+<div class="modal-backdrop" id="catImportModal" role="dialog" aria-modal="true" aria-labelledby="catImportTitle">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <h3 class="modal-title">IMPORT CATALOGUE</h3>
+    <div class="modal-handle" aria-hidden="true"></div>
+    <h3 class="modal-title" id="catImportTitle">IMPORT CATALOGUE</h3>
     <div class="modal-body">
       <div class="field">
         <div class="field-label">UPLOAD CSV OR TXT</div>
@@ -2029,101 +314,101 @@
           <input type="file" id="catFile" accept=".csv,.txt,text/csv,text/plain" hidden>
           CHOOSE FILE&hellip;
         </label>
-        <div class="file-name" id="catFileName"></div>
+        <div class="file-name" id="catFileName" aria-live="polite"></div>
       </div>
       <div class="field">
-        <div class="field-label">OR PASTE CODES</div>
+        <label class="field-label" for="catPaste">OR PASTE CODES</label>
         <textarea class="notes-input" id="catPaste" rows="6" placeholder="ABC123, Widget assembly&#10;DEF456, Bracket M8&#10;GHI789"></textarea>
         <div class="field-help">One code per line. Optional second column = description (CSV). Header row auto-detected.</div>
       </div>
-      <div class="cat-preview" id="catPreview"></div>
+      <div class="cat-preview" id="catPreview" aria-live="polite"></div>
       <div class="modal-actions">
-        <button class="modal-btn secondary" data-close>CANCEL</button>
-        <button class="modal-btn primary" id="catImportSave">IMPORT</button>
+        <button class="modal-btn secondary" type="button" data-close>CANCEL</button>
+        <button class="modal-btn primary" id="catImportSave" type="button">IMPORT</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- EDIT MODAL -->
-<div class="modal-backdrop" id="editModal">
+<div class="modal-backdrop" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <h3 class="modal-title">EDIT ENTRY</h3>
+    <div class="modal-handle" aria-hidden="true"></div>
+    <h3 class="modal-title" id="editTitle">EDIT ENTRY</h3>
     <div class="modal-body">
       <div class="field">
         <div class="field-label">ACTION</div>
-        <div class="action-select" id="editAction">
-          <button class="action-select-btn out" data-a="out">TAKE OUT</button>
-          <button class="action-select-btn in" data-a="in">ADD IN</button>
+        <div class="action-select" id="editAction" role="group" aria-label="Action">
+          <button class="action-select-btn out" type="button" data-a="out">TAKE OUT</button>
+          <button class="action-select-btn in" type="button" data-a="in">ADD IN</button>
         </div>
       </div>
       <div class="field">
-        <div class="field-label">LOCATION</div>
+        <label class="field-label" for="editLoc">LOCATION</label>
         <input class="field-input" id="editLoc" type="text" autocapitalize="characters">
       </div>
       <div class="field">
-        <div class="field-label">CODE</div>
+        <label class="field-label" for="editCode">CODE</label>
         <input class="field-input" id="editCode" type="text" autocapitalize="characters">
       </div>
       <div class="field">
-        <div class="field-label">QUANTITY</div>
+        <label class="field-label" for="editQty">QUANTITY</label>
         <input class="field-input" id="editQty" type="number" min="1">
       </div>
       <div class="field">
-        <div class="field-label">NOTE</div>
+        <label class="field-label" for="editNote">NOTE</label>
         <textarea class="field-input" id="editNote" rows="2" style="font-family: 'IBM Plex Sans', sans-serif; font-size: 14px;"></textarea>
       </div>
       <div class="modal-actions">
-        <button class="modal-btn danger" id="editDelete">DELETE</button>
-        <button class="modal-btn primary" id="editSave">SAVE</button>
+        <button class="modal-btn danger" id="editDelete" type="button">DELETE</button>
+        <button class="modal-btn primary" id="editSave" type="button">SAVE</button>
       </div>
-      <button class="modal-btn secondary" data-close style="grid-column: 1 / -1;">CANCEL</button>
+      <button class="modal-btn secondary" type="button" data-close style="grid-column: 1 / -1;">CANCEL</button>
     </div>
   </div>
 </div>
 
 <!-- EXPORT MODAL -->
-<div class="modal-backdrop" id="exportModal">
+<div class="modal-backdrop" id="exportModal" role="dialog" aria-modal="true" aria-labelledby="exportTitle">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <h3 class="modal-title">EXPORT CSV</h3>
+    <div class="modal-handle" aria-hidden="true"></div>
+    <h3 class="modal-title" id="exportTitle">EXPORT CSV</h3>
     <div class="modal-body">
       <div class="field">
         <div class="field-label">Choose what to export</div>
       </div>
       <div class="modal-actions">
-        <button class="modal-btn primary" id="exportDetail">DETAILED</button>
-        <button class="modal-btn primary" id="exportSummary">SUMMARY</button>
+        <button class="modal-btn primary" id="exportDetail" type="button">DETAILED</button>
+        <button class="modal-btn primary" id="exportSummary" type="button">SUMMARY</button>
       </div>
-      <button class="modal-btn secondary" data-close>CANCEL</button>
+      <button class="modal-btn secondary" type="button" data-close>CANCEL</button>
     </div>
   </div>
 </div>
 
 <!-- CLEAR CONFIRM MODAL -->
-<div class="modal-backdrop" id="clearModal">
+<div class="modal-backdrop" id="clearModal" role="dialog" aria-modal="true" aria-labelledby="clearTitle">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <h3 class="modal-title" style="color: var(--red);">CLEAR ALL DATA?</h3>
+    <div class="modal-handle" aria-hidden="true"></div>
+    <h3 class="modal-title" id="clearTitle" style="color: var(--red);">CLEAR ALL DATA?</h3>
     <div class="modal-body">
       <div style="font-size: 13px; color: var(--text-dim); line-height: 1.5;">
         This permanently deletes <strong id="clearCount" style="color: var(--text);">0</strong> entries, your initials, recent chips, and the loaded catalogue. There's no undo.
       </div>
       <div class="field">
-        <div class="field-label">TYPE <strong style="color: var(--red); letter-spacing: 0.18em;">DELETE</strong> TO CONFIRM</div>
+        <label class="field-label" for="clearConfirmInput">TYPE <strong style="color: var(--red); letter-spacing: 0.18em;">DELETE</strong> TO CONFIRM</label>
         <input class="field-input" id="clearConfirmInput" type="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="DELETE">
       </div>
       <div class="modal-actions">
-        <button class="modal-btn secondary" data-close>CANCEL</button>
-        <button class="modal-btn danger" id="clearConfirm" disabled style="background: var(--red); color: #000; border-color: var(--red);">DELETE EVERYTHING</button>
+        <button class="modal-btn secondary" type="button" data-close>CANCEL</button>
+        <button class="modal-btn danger" id="clearConfirm" type="button" disabled style="background: var(--red); color: #000; border-color: var(--red);">DELETE EVERYTHING</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- SCANNER OVERLAY -->
-<div class="scanner-overlay" id="scannerOverlay" aria-hidden="true">
+<div class="scanner-overlay" id="scannerOverlay" role="dialog" aria-modal="true" aria-label="Barcode scanner" aria-hidden="true">
   <video id="scannerVideo" autoplay playsinline muted></video>
   <div class="scanner-frame" aria-hidden="true">
     <div class="corner tl"></div>
@@ -2133,1586 +418,33 @@
     <div class="scan-line"></div>
   </div>
   <div class="scanner-top">
-    <button class="scanner-btn" id="scannerClose" aria-label="Close scanner" title="Close">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <button class="scanner-btn" id="scannerClose" type="button" aria-label="Close scanner" title="Close">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="6" y1="6" x2="18" y2="18"/>
         <line x1="6" y1="18" x2="18" y2="6"/>
       </svg>
     </button>
-    <div class="scanner-counter hidden" id="scannerCounter">SCANNED: 0</div>
-    <button class="scanner-btn" id="scannerTorch" aria-label="Toggle torch" title="Torch" hidden>
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div class="scanner-counter hidden" id="scannerCounter" aria-live="polite">SCANNED: 0</div>
+    <button class="scanner-btn" id="scannerTorch" type="button" aria-label="Toggle torch" title="Torch" hidden>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M9 2h6l-1 7h2l-5 13v-9H9z"/>
       </svg>
     </button>
   </div>
   <div class="scanner-bottom">
     <div class="scanner-continuous">
-      <button class="toggle" id="scannerContinuous" aria-pressed="false"><span class="toggle-knob"></span></button>
+      <button class="toggle" id="scannerContinuous" type="button" aria-pressed="false" aria-label="Continuous scan"><span class="toggle-knob" aria-hidden="true"></span></button>
       <span class="scanner-continuous-label">CONTINUOUS SCAN</span>
     </div>
-    <div class="scanner-hint" id="scannerHint">HOLD STEADY — SCANNING FOR CODE&hellip;</div>
+    <div class="scanner-hint" id="scannerHint" role="status" aria-live="polite">HOLD STEADY — SCANNING FOR CODE&hellip;</div>
   </div>
   <div class="scanner-loading" id="scannerLoading">STARTING CAMERA&hellip;</div>
-  <div class="scanner-error" id="scannerError">
+  <div class="scanner-error" id="scannerError" role="alert">
     <div class="scanner-error-content" id="scannerErrorContent"></div>
   </div>
 </div>
 
-<div class="toast-wrap" id="toastWrap"></div>
+<div class="toast-wrap" id="toastWrap" role="region" aria-live="polite" aria-label="Notifications"></div>
 
-<script>
-(function(){
-  'use strict';
-
-  const STORAGE_KEY = 'stocktake.v1';
-  const RECENT_LIMIT = 8;
-
-  // -------- STATE --------
-  const DEFAULT_SETTINGS = {
-    glove: false,
-    contrast: false,
-    largeText: false,
-    haptic: true,
-    voice: false,
-    sound: false,
-    strictFormat: false,
-  };
-
-  const HOWDENS_RE = /^[A-Z]{3}[0-9]{4}$/;
-  // Pinned to a specific version so a future release of @zxing/browser
-  // can't silently change scanner behavior or ship a compromised build.
-  const ZXING_SRC = 'https://unpkg.com/@zxing/browser@0.1.5';
-
-  const state = {
-    initials: '',
-    entries: [],
-    catalogue: {},
-    settings: Object.assign({}, DEFAULT_SETTINGS),
-    ui: {
-      mode: 'out',
-      locNum: '',
-      locLetter: '',
-      tab: 'entry',
-      logTime: 'today',
-      logLoc: 'all',
-      logSearch: '',
-      logTotalOpen: false,
-      sumGroup: 'location',
-      sumTime: 'today',
-      sumSearch: '',
-    },
-    lastUndo: null,
-    editingId: null,
-  };
-
-  // -------- PERSIST --------
-  function load() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return;
-      const data = JSON.parse(raw);
-      state.initials = data.initials || '';
-      state.entries = Array.isArray(data.entries) ? data.entries : [];
-      state.catalogue = (data.catalogue && typeof data.catalogue === 'object') ? data.catalogue : {};
-      if (data.settings && typeof data.settings === 'object') {
-        Object.keys(DEFAULT_SETTINGS).forEach(k => {
-          if (typeof data.settings[k] === 'boolean') state.settings[k] = data.settings[k];
-        });
-      }
-    } catch(e) {
-      console.warn('load failed', e);
-    }
-  }
-  function save() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        initials: state.initials,
-        entries: state.entries,
-        catalogue: state.catalogue,
-        settings: state.settings,
-      }));
-    } catch(e) { console.warn('save failed', e); }
-  }
-
-  // -------- UTIL --------
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-  function pad2(n) { return String(n).padStart(2, '0'); }
-  function fmtDate(ts) {
-    const d = new Date(ts);
-    return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-  }
-  function fmtTime(ts) {
-    const d = new Date(ts);
-    return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-  }
-  function isToday(ts) {
-    const d = new Date(ts);
-    const n = new Date();
-    return d.getFullYear() === n.getFullYear()
-      && d.getMonth() === n.getMonth()
-      && d.getDate() === n.getDate();
-  }
-  function escapeCSV(v) {
-    if (v == null) return '';
-    let s = String(v);
-    // CSV-injection guard: a cell that starts with =, +, -, @, tab or CR
-    // will be evaluated as a formula by Excel/Sheets when the export is opened.
-    if (s.length && /^[=+\-@\t\r]/.test(s)) s = "'" + s;
-    if (/[",\n\r]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
-    return s;
-  }
-
-  // -------- TOAST --------
-  function toast(msg, kind) {
-    const wrap = document.getElementById('toastWrap');
-    const el = document.createElement('div');
-    el.className = 'toast' + (kind ? ' ' + kind : '');
-    el.textContent = msg;
-    wrap.appendChild(el);
-    setTimeout(() => {
-      el.classList.add('fade');
-      setTimeout(() => el.remove(), 300);
-    }, 1900);
-  }
-
-  // -------- LOCATION --------
-  function getCurrentLoc() {
-    const num = state.ui.locNum;
-    const letter = state.ui.locLetter;
-    if (!num || !letter) return '';
-    return 'W' + pad2(num) + letter;
-  }
-  function setLocFromString(loc) {
-    const m = /^W(\d{1,2})([ABC])$/.exec(loc.toUpperCase());
-    if (!m) return false;
-    state.ui.locNum = String(parseInt(m[1], 10));
-    state.ui.locLetter = m[2];
-    document.getElementById('locNum').value = state.ui.locNum;
-    renderLocation();
-    return true;
-  }
-
-  function renderLocation() {
-    document.querySelectorAll('.loc-letter').forEach(b => {
-      b.classList.toggle('active', b.dataset.letter === state.ui.locLetter);
-    });
-    const cur = getCurrentLoc();
-    document.getElementById('locDisplay').textContent = cur || '—';
-  }
-
-  // -------- RECENTS --------
-  function recentLocations() {
-    const seen = new Set();
-    const out = [];
-    for (let i = state.entries.length - 1; i >= 0; i--) {
-      const loc = state.entries[i].location;
-      if (loc && !seen.has(loc)) {
-        seen.add(loc);
-        out.push(loc);
-        if (out.length >= RECENT_LIMIT) break;
-      }
-    }
-    return out;
-  }
-  function recentCodes() {
-    const seen = new Set();
-    const out = [];
-    for (let i = state.entries.length - 1; i >= 0; i--) {
-      const c = state.entries[i].code;
-      if (c && !seen.has(c)) {
-        seen.add(c);
-        out.push(c);
-        if (out.length >= RECENT_LIMIT) break;
-      }
-    }
-    return out;
-  }
-  function renderChips() {
-    const locWrap = document.getElementById('recentLocs');
-    const codeWrap = document.getElementById('recentCodes');
-    const locs = recentLocations();
-    const codes = recentCodes();
-    locWrap.innerHTML = '';
-    codeWrap.innerHTML = '';
-    if (!locs.length) {
-      locWrap.innerHTML = '<span class="chips-empty">no recent locations</span>';
-    } else {
-      locs.forEach(l => {
-        const c = document.createElement('button');
-        c.className = 'chip';
-        c.textContent = l;
-        c.onclick = () => { setLocFromString(l); };
-        locWrap.appendChild(c);
-      });
-    }
-    if (!codes.length) {
-      codeWrap.innerHTML = '<span class="chips-empty">no recent codes</span>';
-    } else {
-      codes.forEach(c => {
-        const b = document.createElement('button');
-        b.className = 'chip';
-        b.textContent = c;
-        b.onclick = () => {
-          document.getElementById('codeInput').value = c;
-          document.getElementById('codeInput').focus();
-        };
-        codeWrap.appendChild(b);
-      });
-    }
-  }
-
-  // -------- STATS --------
-  function renderStats() {
-    let inSum = 0, outSum = 0, count = 0;
-    state.entries.forEach(e => {
-      if (!isToday(e.timestamp)) return;
-      count++;
-      if (e.action === 'in') inSum += e.qty;
-      else outSum += e.qty;
-    });
-    document.getElementById('statOut').textContent = outSum;
-    document.getElementById('statIn').textContent = inSum;
-    document.getElementById('statEntries').textContent = count;
-  }
-
-  // -------- LOG --------
-  function filteredEntries() {
-    const q = state.ui.logSearch.trim().toLowerCase();
-    const curLoc = getCurrentLoc();
-    return state.entries
-      .slice()
-      .reverse()
-      .filter(e => {
-        if (state.ui.logTime === 'today' && !isToday(e.timestamp)) return false;
-        if (state.ui.logLoc === 'this' && curLoc && e.location !== curLoc) return false;
-        if (state.ui.logLoc === 'this' && !curLoc) return false;
-        if (q) {
-          const desc = e.description || state.catalogue[e.code] || '';
-          const hay = (e.code + ' ' + e.location + ' ' + (e.note||'') + ' ' + (e.initials||'') + ' ' + desc).toLowerCase();
-          if (!hay.includes(q)) return false;
-        }
-        return true;
-      });
-  }
-
-  function renderLogTotal(items) {
-    const bar = document.getElementById('logTotal');
-    const btn = document.getElementById('totalBtn');
-    if (!state.ui.logTotalOpen) {
-      bar.classList.remove('visible');
-      btn.textContent = 'SHOW TOTAL';
-      return;
-    }
-    bar.classList.add('visible');
-    btn.textContent = 'HIDE TOTAL';
-    let inSum = 0, outSum = 0;
-    items.forEach(e => { if (e.action === 'in') inSum += e.qty; else outSum += e.qty; });
-    const net = inSum - outSum;
-    document.getElementById('ltIn').textContent = '+' + inSum;
-    document.getElementById('ltOut').textContent = '−' + outSum;
-    const netEl = document.getElementById('ltNet');
-    netEl.textContent = (net > 0 ? '+' : '') + net;
-    netEl.className = 'lt-val ' + (net > 0 ? 'pos' : net < 0 ? 'neg' : 'zero');
-    document.getElementById('ltCount').textContent = items.length;
-    const parts = [];
-    parts.push(state.ui.logTime === 'today' ? 'TODAY' : 'ALL TIME');
-    if (state.ui.logLoc === 'this') {
-      const cur = getCurrentLoc();
-      parts.push(cur ? '@ ' + cur : '@ NO LOCATION');
-    } else {
-      parts.push('ALL LOCATIONS');
-    }
-    if (state.ui.logSearch.trim()) parts.push('"' + state.ui.logSearch.trim() + '"');
-    document.getElementById('ltScope').textContent = parts.join(' · ');
-  }
-
-  function renderLog() {
-    const list = document.getElementById('logList');
-    const items = filteredEntries();
-    renderLogTotal(items);
-    list.innerHTML = '';
-    if (!items.length) {
-      const empty = document.createElement('div');
-      empty.className = 'empty-log';
-      empty.textContent = state.entries.length === 0 ? 'NO ENTRIES YET' : 'NO MATCHES';
-      list.appendChild(empty);
-      return;
-    }
-    if (state.ui.logTotalOpen) {
-      renderGroupedItems(items, list);
-    } else {
-      items.forEach(e => {
-        const item = document.createElement('div');
-        item.className = 'log-item ' + e.action;
-        const fmtBadge = e.unusualFormat ? ` <span class="badge fmt" title="Non-standard format">FORMAT</span>` : '';
-        const badge = (e.unknown ? ` <span class="badge cat">NOT IN CAT</span>` : '') + fmtBadge;
-        const desc = e.description || (state.catalogue[e.code] || '');
-        const metaParts = [`${fmtTime(e.timestamp)} · ${e.initials || '—'}`];
-        if (desc) metaParts.push(`<span class="desc">${escapeHtml(desc)}</span>`);
-        if (e.note) metaParts.push(`<span class="note">${escapeHtml(e.note)}</span>`);
-        item.innerHTML = `
-          <div class="log-action">${e.action === 'in' ? '+' : '−'}</div>
-          <div class="log-main">
-            <div class="log-line1">
-              <span class="log-loc">${escapeHtml(e.location)}</span>
-              <span class="log-code">${escapeHtml(e.code)}${badge}</span>
-            </div>
-            <div class="log-line2">${metaParts.join(' · ')}</div>
-          </div>
-          <div class="log-qty">${e.action === 'in' ? '+' : '−'}${e.qty}</div>
-        `;
-        item.onclick = () => openEdit(e.id);
-        list.appendChild(item);
-      });
-    }
-  }
-
-  function renderGroupedItems(items, list) {
-    const groups = new Map();
-    items.forEach(e => {
-      if (!e.code) return;
-      let g = groups.get(e.code);
-      if (!g) { g = { code: e.code, in: 0, out: 0, locs: new Set(), count: 0, lastTs: 0 }; groups.set(e.code, g); }
-      if (e.action === 'in') g.in += e.qty; else g.out += e.qty;
-      g.locs.add(e.location);
-      g.count++;
-      if (e.timestamp > g.lastTs) g.lastTs = e.timestamp;
-    });
-    const arr = Array.from(groups.values()).sort((a, b) => b.lastTs - a.lastTs);
-    arr.forEach(g => {
-      const net = g.in - g.out;
-      const cls = net > 0 ? 'in' : net < 0 ? 'out' : '';
-      const sign = net > 0 ? '+' : net < 0 ? '−' : '';
-      const locs = Array.from(g.locs);
-      const locStr = locs.length === 1 ? locs[0] : locs.length + ' LOCS';
-      const meta = `${g.count} ENTR${g.count === 1 ? 'Y' : 'IES'} · IN +${g.in} · OUT −${g.out}`;
-      const item = document.createElement('div');
-      item.className = 'log-item ' + cls;
-      item.innerHTML = `
-        <div class="log-action">∑</div>
-        <div class="log-main">
-          <div class="log-line1">
-            <span class="log-loc">${escapeHtml(locStr)}</span>
-            <span class="log-code">${escapeHtml(g.code)}</span>
-          </div>
-          <div class="log-line2">${meta}</div>
-        </div>
-        <div class="log-qty">${sign}${Math.abs(net)}</div>
-      `;
-      item.onclick = () => {
-        document.getElementById('logSearch').value = g.code;
-        state.ui.logSearch = g.code;
-        state.ui.logTotalOpen = false;
-        renderLog();
-      };
-      list.appendChild(item);
-    });
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
-
-  // -------- SUMMARY --------
-  function renderSummary() {
-    const list = document.getElementById('groupList');
-    const groupBy = state.ui.sumGroup;
-    const onlyToday = state.ui.sumTime === 'today';
-    const q = state.ui.sumSearch.trim().toLowerCase();
-
-    const groups = new Map();
-    state.entries.forEach(e => {
-      if (onlyToday && !isToday(e.timestamp)) return;
-      const key = groupBy === 'location' ? e.location : e.code;
-      if (!key) return;
-      if (q && !key.toLowerCase().includes(q)) return;
-      let g = groups.get(key);
-      if (!g) { g = { key, in: 0, out: 0 }; groups.set(key, g); }
-      if (e.action === 'in') g.in += e.qty; else g.out += e.qty;
-    });
-
-    const arr = Array.from(groups.values());
-    arr.sort((a, b) => {
-      const na = (b.in + b.out) - (a.in + a.out);
-      if (na !== 0) return na;
-      return a.key.localeCompare(b.key);
-    });
-
-    list.innerHTML = '';
-    if (!arr.length) {
-      const empty = document.createElement('div');
-      empty.className = 'empty-log';
-      empty.textContent = 'NO DATA';
-      list.appendChild(empty);
-      return;
-    }
-
-    arr.forEach(g => {
-      const net = g.in - g.out;
-      const cls = net > 0 ? 'pos' : net < 0 ? 'neg' : 'zero';
-      const sign = net > 0 ? '+' : '';
-      const item = document.createElement('div');
-      item.className = 'group-item';
-      item.innerHTML = `
-        <div class="group-key">${escapeHtml(g.key)}</div>
-        <div class="group-stat in"><span class="lbl">IN</span><span class="val">+${g.in}</span></div>
-        <div class="group-stat out"><span class="lbl">OUT</span><span class="val">−${g.out}</span></div>
-        <div class="group-stat net"><span class="lbl">NET</span><span class="val ${cls}">${sign}${net}</span></div>
-      `;
-      list.appendChild(item);
-    });
-  }
-
-  // -------- RENDER ALL --------
-  function renderAll() {
-    renderStats();
-    renderChips();
-    renderLog();
-    renderSummary();
-    renderInitials();
-  }
-
-  function renderInitials() {
-    const sub = document.getElementById('brandSub');
-    if (state.initials) {
-      sub.textContent = 'WAREHOUSE LOG // ' + state.initials;
-      sub.style.color = '';
-    } else {
-      sub.textContent = 'WAREHOUSE LOG // SET INITIALS →';
-      sub.style.color = 'var(--amber)';
-    }
-  }
-
-  // -------- SETTINGS --------
-  function applySettings() {
-    const b = document.body;
-    b.classList.toggle('glove', state.settings.glove);
-    b.classList.toggle('contrast', state.settings.contrast);
-    b.classList.toggle('large-text', state.settings.largeText);
-    b.classList.toggle('voice-on', state.settings.voice && voiceSupported);
-    document.querySelectorAll('#settingsGroup .toggle').forEach(t => {
-      const k = t.dataset.key;
-      t.setAttribute('aria-pressed', state.settings[k] ? 'true' : 'false');
-    });
-    if (state.settings.voice && !voiceSupported) {
-      // can't enable, silently revert
-      state.settings.voice = false;
-    }
-  }
-  function setSetting(key, val) {
-    state.settings[key] = !!val;
-    save();
-    applySettings();
-  }
-  function openSettings() {
-    const inp = document.getElementById('settingsInitials');
-    inp.value = state.initials || '';
-    updateInitStatus();
-    updateCatStatus();
-    openModal('settingsModal');
-    if (!state.initials) setTimeout(() => inp.focus(), 80);
-  }
-  function updateInitStatus() {
-    const el = document.getElementById('initStatus');
-    const v = (document.getElementById('settingsInitials').value || '').toUpperCase().replace(/[^A-Z]/g, '');
-    if (!v) { el.textContent = state.initials ? '' : 'REQUIRED — TAGGED ON EVERY ENTRY'; el.className = 'init-status warn'; return; }
-    if (v.length < 2 || v.length > 6) { el.textContent = 'NEED 2-6 LETTERS'; el.className = 'init-status warn'; return; }
-    el.textContent = 'SAVED'; el.className = 'init-status ok';
-  }
-
-  // -------- HAPTIC / SOUND --------
-  function vibrate(pattern, opts) {
-    if (!(opts && opts.force) && !state.settings.haptic) return;
-    if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch(e) {} }
-  }
-  let audioCtx = null;
-  function beep(freq, durMs, opts) {
-    if (!(opts && opts.force) && !state.settings.sound) return;
-    try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      const t = audioCtx.currentTime;
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = 'sine';
-      o.frequency.value = freq || 880;
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.32, t + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + (durMs || 120) / 1000);
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start(t);
-      o.stop(t + (durMs || 120) / 1000 + 0.02);
-    } catch(e) {}
-  }
-
-  // -------- VOICE --------
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const voiceSupported = !!SR;
-  let recognition = null;
-  let listening = false;
-  function setupRecognition() {
-    if (!voiceSupported) return;
-    recognition = new SR();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-    recognition.continuous = false;
-    recognition.onresult = (e) => {
-      const transcript = (e.results[0][0].transcript || '').trim();
-      const code = transcript.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      const inp = document.getElementById('codeInput');
-      if (code) {
-        inp.value = code;
-        toast('HEARD: ' + code, 'in');
-      } else {
-        toast('NO CODE HEARD', 'warn');
-      }
-    };
-    recognition.onerror = (e) => {
-      stopVoice();
-      if (e.error !== 'aborted' && e.error !== 'no-speech') toast('VOICE ERROR', 'warn');
-    };
-    recognition.onend = () => stopVoice();
-  }
-  function startVoice() {
-    if (!recognition) return;
-    if (listening) { stopVoice(); return; }
-    try {
-      recognition.start();
-      listening = true;
-      document.getElementById('micBtn').classList.add('listening');
-      document.getElementById('voiceOverlay').classList.add('active');
-    } catch(e) { stopVoice(); }
-  }
-  function stopVoice() {
-    listening = false;
-    if (recognition) { try { recognition.abort(); } catch(e) {} }
-    document.getElementById('micBtn').classList.remove('listening');
-    document.getElementById('voiceOverlay').classList.remove('active');
-  }
-
-  // -------- NETWORK STATUS --------
-  function updateNetStatus() {
-    const el = document.getElementById('netStatus');
-    if (navigator.onLine) {
-      el.classList.remove('offline');
-      el.title = 'Online';
-    } else {
-      el.classList.add('offline');
-      el.title = 'Offline — entries still save locally';
-    }
-  }
-
-  // -------- SUBMIT --------
-  function rejectFeedback(msg, focusEl, select) {
-    toast(msg, 'warn');
-    vibrate([100, 50, 100]);
-    if (focusEl) {
-      focusEl.focus();
-      if (select && focusEl.select) focusEl.select();
-    }
-  }
-
-  function submitEntry(opts) {
-    opts = opts || {};
-    const codeInput = document.getElementById('codeInput');
-    const qtyInput = document.getElementById('qtyInput');
-    const noteInput = document.getElementById('notesInput');
-
-    if (!state.initials) {
-      rejectFeedback('SET INITIALS FIRST');
-      openSettings();
-      return null;
-    }
-    const loc = getCurrentLoc();
-    if (!loc) { rejectFeedback('PICK A LOCATION'); return null; }
-
-    const code = ((opts.code != null ? opts.code : codeInput.value) || '').trim().toUpperCase();
-    if (!code) { rejectFeedback('ENTER A CODE', codeInput); return null; }
-
-    const formatOk = HOWDENS_RE.test(code);
-    if (!formatOk && state.settings.strictFormat) {
-      rejectFeedback('REJECTED — NEEDS LLLDDDD FORMAT', codeInput, true);
-      return null;
-    }
-
-    const qty = Math.max(1, parseInt(opts.qty != null ? opts.qty : qtyInput.value, 10) || 1);
-    const note = ((opts.note != null ? opts.note : noteInput.value) || '').trim();
-
-    const catalogueLoaded = catalogueCount() > 0;
-    const inCat = Object.prototype.hasOwnProperty.call(state.catalogue, code);
-    const description = inCat ? (state.catalogue[code] || '') : '';
-    const unknown = catalogueLoaded && !inCat;
-    const unusualFormat = !formatOk;
-    const isIn = state.ui.mode === 'in';
-
-    const entry = {
-      id: uid(),
-      timestamp: Date.now(),
-      initials: state.initials,
-      action: state.ui.mode,
-      location: loc,
-      code,
-      qty,
-      note,
-      description,
-      unknown,
-      unusualFormat,
-    };
-    state.entries.push(entry);
-    save();
-
-    state.lastUndo = entry.id;
-    showUndo(entry);
-
-    codeInput.value = '';
-    qtyInput.value = '1';
-    noteInput.value = '';
-    document.getElementById('notesArea').classList.remove('open');
-    document.getElementById('notesToggle').textContent = '+ ADD NOTE';
-
-    if (unusualFormat) toast('LOGGED — UNUSUAL FORMAT, DOUBLE-CHECK', 'warn');
-    else if (unknown) toast('LOGGED — CODE NOT IN CATALOGUE', 'warn');
-    else toast(`${isIn ? 'ADDED' : 'TOOK'} ${qty}× ${code} @ ${loc}`, entry.action);
-
-    vibrate(50);
-    beep(isIn ? 1040 : 660, 110);
-
-    document.getElementById('suggestions').classList.remove('open');
-    renderAll();
-    codeInput.focus();
-    return entry;
-  }
-
-  function showUndo(entry) {
-    const bar = document.getElementById('undoBar');
-    const txt = document.getElementById('undoText');
-    const sign = entry.action === 'in' ? '+' : '−';
-    txt.innerHTML = `Last: <strong>${escapeHtml(sign + entry.qty + ' ' + entry.code)}</strong> @ ${escapeHtml(entry.location)}`;
-    bar.classList.add('visible');
-  }
-
-  function undoLast() {
-    if (!state.lastUndo) return;
-    const idx = state.entries.findIndex(e => e.id === state.lastUndo);
-    if (idx === -1) return;
-    state.entries.splice(idx, 1);
-    save();
-    state.lastUndo = null;
-    document.getElementById('undoBar').classList.remove('visible');
-    toast('UNDONE', 'warn');
-    renderAll();
-  }
-
-  // -------- EDIT --------
-  function openEdit(id) {
-    const e = state.entries.find(x => x.id === id);
-    if (!e) return;
-    state.editingId = id;
-    document.getElementById('editLoc').value = e.location;
-    document.getElementById('editCode').value = e.code;
-    document.getElementById('editQty').value = e.qty;
-    document.getElementById('editNote').value = e.note || '';
-    document.querySelectorAll('#editAction .action-select-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.a === e.action);
-    });
-    openModal('editModal');
-  }
-
-  function saveEdit() {
-    const e = state.entries.find(x => x.id === state.editingId);
-    if (!e) return;
-    const action = document.querySelector('#editAction .action-select-btn.active').dataset.a;
-    const loc = document.getElementById('editLoc').value.trim().toUpperCase();
-    const code = document.getElementById('editCode').value.trim().toUpperCase();
-    const qty = Math.max(1, parseInt(document.getElementById('editQty').value, 10) || 1);
-    const note = document.getElementById('editNote').value.trim();
-    if (!loc || !code) { toast('LOC AND CODE REQUIRED', 'warn'); return; }
-    e.action = action;
-    e.location = loc;
-    e.code = code;
-    e.qty = qty;
-    e.note = note;
-    e.unusualFormat = !HOWDENS_RE.test(code);
-    if (catalogueCount() > 0) {
-      const inCat = Object.prototype.hasOwnProperty.call(state.catalogue, code);
-      e.description = inCat ? (state.catalogue[code] || '') : '';
-      e.unknown = !inCat;
-    }
-    save();
-    closeAllModals();
-    toast('UPDATED', 'in');
-    renderAll();
-  }
-
-  function deleteEdit() {
-    const idx = state.entries.findIndex(x => x.id === state.editingId);
-    if (idx === -1) return;
-    state.entries.splice(idx, 1);
-    save();
-    closeAllModals();
-    toast('DELETED', 'out');
-    renderAll();
-  }
-
-  // -------- MODALS --------
-  function openModal(id) {
-    document.getElementById(id).classList.add('open');
-  }
-  function closeAllModals() {
-    document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('open'));
-    state.editingId = null;
-  }
-  // -------- EXPORT --------
-  function downloadCSV(filename, content) {
-    const blob = new Blob(['﻿' + content], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
-  }
-
-  function exportDetailed() {
-    const rows = [['date','time','initials','location','action','code','description','quantity','note','in_catalogue']];
-    state.entries.forEach(e => {
-      const desc = e.description || (state.catalogue[e.code] || '');
-      const inCat = Object.prototype.hasOwnProperty.call(state.catalogue, e.code);
-      rows.push([
-        fmtDate(e.timestamp),
-        fmtTime(e.timestamp),
-        e.initials || '',
-        e.location,
-        e.action,
-        e.code,
-        desc,
-        e.qty,
-        e.note || '',
-        catalogueCount() > 0 ? (inCat ? 'yes' : 'no') : '',
-      ]);
-    });
-    const csv = rows.map(r => r.map(escapeCSV).join(',')).join('\r\n');
-    const stamp = fmtDate(Date.now()) + '_' + fmtTime(Date.now()).replace(':','');
-    downloadCSV(`stocktake_detail_${stamp}.csv`, csv);
-    closeAllModals();
-    toast('CSV EXPORTED', 'in');
-  }
-
-  function exportSummaryCSV() {
-    const byLoc = new Map();
-    const byCode = new Map();
-    state.entries.forEach(e => {
-      const lk = e.location;
-      const ck = e.code;
-      if (lk) {
-        let g = byLoc.get(lk); if (!g) { g = {in:0,out:0}; byLoc.set(lk,g); }
-        if (e.action === 'in') g.in += e.qty; else g.out += e.qty;
-      }
-      if (ck) {
-        let g = byCode.get(ck); if (!g) { g = {in:0,out:0}; byCode.set(ck,g); }
-        if (e.action === 'in') g.in += e.qty; else g.out += e.qty;
-      }
-    });
-    const rows = [['group_type','key','in','out','net']];
-    Array.from(byLoc.entries()).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,g]) => {
-      rows.push(['location', k, g.in, g.out, g.in - g.out]);
-    });
-    Array.from(byCode.entries()).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,g]) => {
-      rows.push(['code', k, g.in, g.out, g.in - g.out]);
-    });
-    const csv = rows.map(r => r.map(escapeCSV).join(',')).join('\r\n');
-    const stamp = fmtDate(Date.now()) + '_' + fmtTime(Date.now()).replace(':','');
-    downloadCSV(`stocktake_summary_${stamp}.csv`, csv);
-    closeAllModals();
-    toast('CSV EXPORTED', 'in');
-  }
-
-  // -------- BIND --------
-  function bind() {
-    // Tabs
-    document.querySelectorAll('.tab').forEach(t => {
-      t.onclick = () => {
-        const tab = t.dataset.tab;
-        state.ui.tab = tab;
-        document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t));
-        document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + tab));
-      };
-    });
-
-    // Mode toggle
-    document.querySelectorAll('.mode-btn').forEach(b => {
-      b.onclick = () => {
-        state.ui.mode = b.dataset.mode;
-        const tog = document.getElementById('modeToggle');
-        tog.classList.toggle('out', state.ui.mode === 'out');
-        tog.classList.toggle('in', state.ui.mode === 'in');
-        const sb = document.getElementById('submitBtn');
-        sb.classList.toggle('out', state.ui.mode === 'out');
-        sb.classList.toggle('in', state.ui.mode === 'in');
-        sb.textContent = state.ui.mode === 'out' ? 'LOG TAKE-OUT' : 'LOG ADD-IN';
-      };
-    });
-
-    // Location number
-    const locNum = document.getElementById('locNum');
-    locNum.oninput = () => {
-      let v = locNum.value.replace(/\D/g, '').slice(0, 2);
-      if (v) {
-        let n = parseInt(v, 10);
-        if (n > 99) n = 99;
-        if (n < 1 && v.length === 2) n = 1;
-        v = n ? String(n) : '';
-      }
-      locNum.value = v;
-      state.ui.locNum = v;
-      renderLocation();
-    };
-    locNum.onkeydown = (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById('codeInput').focus();
-      }
-    };
-
-    // Letters
-    document.querySelectorAll('.loc-letter').forEach(b => {
-      b.onclick = () => {
-        state.ui.locLetter = b.dataset.letter;
-        renderLocation();
-        if (!document.getElementById('codeInput').value) {
-          document.getElementById('codeInput').focus();
-        }
-      };
-    });
-
-    // Code input
-    const codeInput = document.getElementById('codeInput');
-    codeInput.oninput = () => {
-      const start = codeInput.selectionStart;
-      codeInput.value = codeInput.value.toUpperCase();
-      try { codeInput.setSelectionRange(start, start); } catch(e) {}
-      renderSuggestions();
-    };
-    codeInput.onkeydown = (e) => {
-      if (e.key === 'ArrowDown') { e.preventDefault(); moveSuggestion(1); return; }
-      if (e.key === 'ArrowUp')   { e.preventDefault(); moveSuggestion(-1); return; }
-      if (e.key === 'Escape')    { document.getElementById('suggestions').classList.remove('open'); return; }
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        if (suggestionFocus >= 0 && suggestionList[suggestionFocus]) {
-          codeInput.value = suggestionList[suggestionFocus];
-          document.getElementById('suggestions').classList.remove('open');
-          return;
-        }
-        submitEntry();
-      }
-    };
-    codeInput.onfocus = () => renderSuggestions();
-    codeInput.onblur = () => {
-      setTimeout(() => document.getElementById('suggestions').classList.remove('open'), 180);
-    };
-
-    // Catalogue — open import modal
-    document.getElementById('catImportBtn').onclick = () => {
-      document.getElementById('catFile').value = '';
-      document.getElementById('catFileName').textContent = '';
-      document.getElementById('catPaste').value = '';
-      document.getElementById('catPreview').classList.remove('show');
-      openModal('catImportModal');
-    };
-
-    // File picker
-    document.getElementById('catFile').onchange = (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        const text = String(reader.result || '');
-        document.getElementById('catPaste').value = text;
-        document.getElementById('catFileName').textContent = file.name;
-        previewCatalogueText(text);
-      };
-      reader.onerror = () => toast('FILE READ FAILED', 'warn');
-      reader.readAsText(file);
-    };
-
-    // Paste preview
-    document.getElementById('catPaste').oninput = (e) => {
-      previewCatalogueText(e.target.value);
-    };
-
-    // Import save
-    document.getElementById('catImportSave').onclick = () => {
-      const text = document.getElementById('catPaste').value;
-      commitCatalogue(text);
-    };
-
-    // Clear catalogue (two-tap confirm)
-    let catClearPrimed = false;
-    let catClearTimer = null;
-    const catClearBtn = document.getElementById('catClearBtn');
-    catClearBtn.onclick = () => {
-      if (catalogueCount() === 0) return;
-      if (!catClearPrimed) {
-        catClearPrimed = true;
-        catClearBtn.textContent = 'TAP AGAIN';
-        catClearBtn.classList.add('priming');
-        clearTimeout(catClearTimer);
-        catClearTimer = setTimeout(() => {
-          catClearPrimed = false;
-          catClearBtn.textContent = 'CLEAR';
-          catClearBtn.classList.remove('priming');
-        }, 2500);
-        return;
-      }
-      clearTimeout(catClearTimer);
-      catClearPrimed = false;
-      state.catalogue = {};
-      invalidateCatalogueCache();
-      save();
-      updateCatStatus();
-      catClearBtn.textContent = 'CLEAR';
-      catClearBtn.classList.remove('priming');
-      toast('CATALOGUE CLEARED', 'warn');
-      renderLog();
-    };
-
-    // Qty
-    const qtyInput = document.getElementById('qtyInput');
-    document.getElementById('qtyMinus').onclick = () => {
-      const v = Math.max(1, (parseInt(qtyInput.value,10) || 1) - 1);
-      qtyInput.value = v;
-    };
-    document.getElementById('qtyPlus').onclick = () => {
-      const v = Math.max(1, (parseInt(qtyInput.value,10) || 1) + 1);
-      qtyInput.value = v;
-    };
-
-    // Notes
-    document.getElementById('notesToggle').onclick = () => {
-      const a = document.getElementById('notesArea');
-      const t = document.getElementById('notesToggle');
-      a.classList.toggle('open');
-      t.textContent = a.classList.contains('open') ? '− HIDE NOTE' : '+ ADD NOTE';
-      if (a.classList.contains('open')) document.getElementById('notesInput').focus();
-    };
-
-    // Submit
-    document.getElementById('submitBtn').onclick = submitEntry;
-
-    // Undo
-    document.getElementById('undoBtn').onclick = undoLast;
-
-    // Settings (gear)
-    document.getElementById('settingsBtn').onclick = openSettings;
-
-    // Initials field inside settings — autosave
-    const initInput = document.getElementById('settingsInitials');
-    initInput.oninput = () => {
-      const cleaned = initInput.value.toUpperCase().replace(/[^A-Z]/g, '');
-      if (cleaned !== initInput.value) initInput.value = cleaned;
-      if (cleaned.length >= 2 && cleaned.length <= 6) {
-        state.initials = cleaned;
-        save();
-        renderInitials();
-      } else if (!cleaned) {
-        // allow clearing while typing; don't wipe persisted initials
-      }
-      updateInitStatus();
-    };
-
-    // Setting toggles
-    document.querySelectorAll('#settingsGroup .toggle').forEach(t => {
-      t.onclick = () => {
-        const key = t.dataset.key;
-        if (key === 'voice' && !voiceSupported && !state.settings.voice) {
-          toast('VOICE NOT SUPPORTED', 'warn');
-          return;
-        }
-        setSetting(key, !state.settings[key]);
-        if (key === 'sound' && state.settings.sound) beep(880, 90);
-        if (key === 'haptic' && state.settings.haptic) vibrate(40);
-      };
-    });
-
-    // Mic button
-    document.getElementById('micBtn').onclick = startVoice;
-
-    // Scan button
-    document.getElementById('scanBtn').onclick = openScanner;
-    document.getElementById('scannerClose').onclick = closeScanner;
-    document.getElementById('scannerTorch').onclick = toggleTorch;
-    document.getElementById('scannerContinuous').onclick = () => {
-      scanner.continuous = !scanner.continuous;
-      const btn = document.getElementById('scannerContinuous');
-      btn.setAttribute('aria-pressed', scanner.continuous ? 'true' : 'false');
-      updateScanCounter();
-      if (!scanner.continuous) scanner.count = 0;
-    };
-
-    // Log filters
-    document.querySelectorAll('#filterTime .filter-btn').forEach(b => {
-      b.onclick = () => {
-        document.querySelectorAll('#filterTime .filter-btn').forEach(x => x.classList.toggle('active', x === b));
-        state.ui.logTime = b.dataset.f;
-        renderLog();
-      };
-    });
-    document.querySelectorAll('#filterLoc .filter-btn').forEach(b => {
-      b.onclick = () => {
-        document.querySelectorAll('#filterLoc .filter-btn').forEach(x => x.classList.toggle('active', x === b));
-        state.ui.logLoc = b.dataset.f;
-        renderLog();
-      };
-    });
-    document.getElementById('logSearch').oninput = (e) => {
-      state.ui.logSearch = e.target.value;
-      renderLog();
-    };
-    document.getElementById('totalBtn').onclick = () => {
-      state.ui.logTotalOpen = !state.ui.logTotalOpen;
-      renderLog();
-    };
-
-    // Summary controls
-    document.querySelectorAll('#sumGroup .filter-btn').forEach(b => {
-      b.onclick = () => {
-        document.querySelectorAll('#sumGroup .filter-btn').forEach(x => x.classList.toggle('active', x === b));
-        state.ui.sumGroup = b.dataset.g;
-        renderSummary();
-      };
-    });
-    document.querySelectorAll('#sumTime .filter-btn').forEach(b => {
-      b.onclick = () => {
-        document.querySelectorAll('#sumTime .filter-btn').forEach(x => x.classList.toggle('active', x === b));
-        state.ui.sumTime = b.dataset.f;
-        renderSummary();
-      };
-    });
-    document.getElementById('sumSearch').oninput = (e) => {
-      state.ui.sumSearch = e.target.value;
-      renderSummary();
-    };
-
-    // Edit modal
-    document.querySelectorAll('#editAction .action-select-btn').forEach(b => {
-      b.onclick = () => {
-        document.querySelectorAll('#editAction .action-select-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
-      };
-    });
-    document.getElementById('editSave').onclick = saveEdit;
-    document.getElementById('editDelete').onclick = deleteEdit;
-
-    // Export
-    document.getElementById('exportBtn').onclick = () => {
-      if (!state.entries.length) { toast('NOTHING TO EXPORT', 'warn'); return; }
-      openModal('exportModal');
-    };
-    document.getElementById('exportDetail').onclick = exportDetailed;
-    document.getElementById('exportSummary').onclick = exportSummaryCSV;
-
-    // Clear
-    const clearInput = document.getElementById('clearConfirmInput');
-    const clearConfirmBtn = document.getElementById('clearConfirm');
-
-    document.getElementById('clearBtn').onclick = () => {
-      document.getElementById('clearCount').textContent = state.entries.length;
-      clearInput.value = '';
-      clearConfirmBtn.disabled = true;
-      openModal('clearModal');
-      setTimeout(() => clearInput.focus(), 80);
-    };
-
-    clearInput.oninput = () => {
-      clearInput.value = clearInput.value.toUpperCase();
-      clearConfirmBtn.disabled = clearInput.value.trim() !== 'DELETE';
-    };
-    clearInput.onkeydown = (e) => {
-      if (e.key === 'Enter' && !clearConfirmBtn.disabled) {
-        e.preventDefault();
-        clearConfirmBtn.click();
-      }
-    };
-
-    clearConfirmBtn.onclick = () => {
-      if (clearInput.value.trim() !== 'DELETE') return;
-      state.entries = [];
-      state.initials = '';
-      state.catalogue = {};
-      invalidateCatalogueCache();
-      save();
-      closeAllModals();
-      toast('CLEARED', 'warn');
-      renderAll();
-      updateCatStatus();
-    };
-
-    // Modal backdrops
-    document.querySelectorAll('.modal-backdrop').forEach(m => {
-      m.addEventListener('click', (e) => {
-        if (e.target === m) closeAllModals();
-      });
-    });
-    document.querySelectorAll('[data-close]').forEach(b => {
-      b.onclick = closeAllModals;
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (scanner.open) { closeScanner(); return; }
-        closeAllModals();
-      }
-    });
-  }
-
-  // -------- CATALOGUE --------
-  let _catKeysCache = null;
-  function catalogueKeys() {
-    if (_catKeysCache) return _catKeysCache;
-    _catKeysCache = state.catalogue ? Object.keys(state.catalogue).sort() : [];
-    return _catKeysCache;
-  }
-  function invalidateCatalogueCache() { _catKeysCache = null; }
-  function catalogueCount() { return catalogueKeys().length; }
-
-  function parseCatalogueLine(line) {
-    line = line.trim();
-    if (!line || line.startsWith('#')) return null;
-    let code, desc = '';
-    if (line[0] === '"') {
-      const m = /^"((?:[^"]|"")*)"\s*[,;\t]?(.*)$/.exec(line);
-      if (m) { code = m[1].replace(/""/g, '"'); desc = m[2].trim(); }
-      else { code = line.replace(/^"|"$/g, ''); }
-    } else {
-      const m = /^([^,;\t]+)[,;\t](.*)$/.exec(line);
-      if (m) { code = m[1].trim(); desc = m[2].trim(); }
-      else { code = line.trim(); }
-    }
-    if (desc && desc[0] === '"') {
-      const m2 = /^"((?:[^"]|"")*)"\s*$/.exec(desc);
-      if (m2) desc = m2[1].replace(/""/g, '"');
-    }
-    code = code.toUpperCase();
-    if (!code) return null;
-    return [code, desc];
-  }
-
-  function isLikelyHeader(code, desc) {
-    const c = code.toLowerCase();
-    const d = (desc || '').toLowerCase();
-    const codeHeaders = new Set(['code','sku','item','itemcode','item code','barcode','product','product code','part','part no','partno']);
-    const descHeaders = new Set(['description','desc','name','product name','title']);
-    return codeHeaders.has(c) || descHeaders.has(d);
-  }
-
-  function parseCatalogueText(text) {
-    const lines = text.split(/\r?\n/);
-    const map = {};
-    let count = 0;
-    let skipped = 0;
-    let firstParsed = true;
-    for (const raw of lines) {
-      const parsed = parseCatalogueLine(raw);
-      if (!parsed) continue;
-      const [code, desc] = parsed;
-      if (firstParsed && isLikelyHeader(code, desc)) {
-        firstParsed = false;
-        skipped++;
-        continue;
-      }
-      firstParsed = false;
-      if (code.length > 64) { skipped++; continue; }
-      map[code] = desc;
-      count++;
-    }
-    return { map, count, skipped };
-  }
-
-  function previewCatalogueText(text) {
-    const el = document.getElementById('catPreview');
-    if (!text || !text.trim()) { el.classList.remove('show'); el.innerHTML = ''; return; }
-    const r = parseCatalogueText(text);
-    if (!r.count) {
-      el.classList.add('show');
-      el.innerHTML = 'No valid codes found.';
-      return;
-    }
-    const sample = Object.keys(r.map).slice(0, 3).map(k => k + (r.map[k] ? ' — ' + r.map[k] : '')).join(' · ');
-    el.classList.add('show');
-    el.innerHTML = `Will import <strong>${r.count}</strong> code${r.count === 1 ? '' : 's'}${r.skipped ? ` <span style="color:var(--text-faint)">(${r.skipped} skipped)</span>` : ''}<br><span style="color:var(--text-faint)">e.g. ${escapeHtml(sample)}</span>`;
-  }
-
-  function commitCatalogue(text) {
-    const r = parseCatalogueText(text);
-    if (!r.count) {
-      toast('NO VALID CODES FOUND', 'warn');
-      return;
-    }
-    state.catalogue = r.map;
-    invalidateCatalogueCache();
-    save();
-    updateCatStatus();
-    closeAllModals();
-    toast(`IMPORTED ${r.count} CODE${r.count === 1 ? '' : 'S'}`, 'in');
-    renderLog();
-  }
-
-  function updateCatStatus() {
-    const el = document.getElementById('catStatus');
-    const clearBtn = document.getElementById('catClearBtn');
-    if (!el) return;
-    const n = catalogueCount();
-    if (n) {
-      el.textContent = `CATALOGUE: ${n} CODE${n === 1 ? '' : 'S'} LOADED`;
-      el.className = 'cat-status-text loaded';
-      clearBtn.disabled = false;
-    } else {
-      el.textContent = 'NO CATALOGUE LOADED';
-      el.className = 'cat-status-text';
-      clearBtn.disabled = true;
-    }
-  }
-
-  // -------- SUGGESTIONS --------
-  let suggestionFocus = -1;
-  let suggestionList = [];
-
-  function renderSuggestions() {
-    const wrap = document.getElementById('suggestions');
-    const inp = document.getElementById('codeInput');
-    const q = inp.value.trim().toUpperCase();
-    if (!q || catalogueCount() === 0) {
-      wrap.classList.remove('open');
-      wrap.innerHTML = '';
-      suggestionList = [];
-      suggestionFocus = -1;
-      return;
-    }
-    const codes = catalogueKeys();
-    const prefix = [];
-    const contains = [];
-    for (const c of codes) {
-      if (c === q) continue;
-      if (c.startsWith(q)) prefix.push(c);
-      else if (c.includes(q)) contains.push(c);
-      if (prefix.length + contains.length > 50) break;
-    }
-    const results = prefix.concat(contains).slice(0, 6);
-    suggestionList = results;
-    suggestionFocus = -1;
-    if (!results.length) {
-      wrap.classList.remove('open');
-      wrap.innerHTML = '';
-      return;
-    }
-    wrap.innerHTML = '';
-    results.forEach((code, idx) => {
-      const desc = state.catalogue[code] || '';
-      const item = document.createElement('div');
-      item.className = 'suggestion-item';
-      item.innerHTML = `
-        <div class="suggestion-code">${highlightMatch(code, q)}</div>
-        ${desc ? `<div class="suggestion-desc">${escapeHtml(desc)}</div>` : ''}
-      `;
-      item.addEventListener('mousedown', (e) => { e.preventDefault(); });
-      item.addEventListener('click', () => {
-        inp.value = code;
-        wrap.classList.remove('open');
-        inp.focus();
-      });
-      wrap.appendChild(item);
-    });
-    wrap.classList.add('open');
-  }
-
-  function highlightMatch(code, q) {
-    const idx = code.indexOf(q);
-    if (idx < 0) return escapeHtml(code);
-    return escapeHtml(code.slice(0, idx))
-      + `<span class="suggestion-mark">${escapeHtml(code.slice(idx, idx + q.length))}</span>`
-      + escapeHtml(code.slice(idx + q.length));
-  }
-
-  function moveSuggestion(delta) {
-    const wrap = document.getElementById('suggestions');
-    if (!wrap.classList.contains('open') || !suggestionList.length) return;
-    const items = wrap.querySelectorAll('.suggestion-item');
-    suggestionFocus = (suggestionFocus + delta + items.length) % items.length;
-    items.forEach((it, i) => it.classList.toggle('focus', i === suggestionFocus));
-    items[suggestionFocus].scrollIntoView({ block: 'nearest' });
-  }
-
-  // -------- SCANNER --------
-  const scanner = {
-    open: false,
-    reader: null,
-    controls: null,
-    track: null,
-    torchOn: false,
-    continuous: false,
-    count: 0,
-    lastCode: '',
-    lastTime: 0,
-  };
-
-  let zxingPromise = null;
-  function loadZXing() {
-    if (window.ZXingBrowser) return Promise.resolve(window.ZXingBrowser);
-    if (zxingPromise) return zxingPromise;
-    zxingPromise = new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = ZXING_SRC;
-      s.async = true;
-      s.onload = () => {
-        if (window.ZXingBrowser) resolve(window.ZXingBrowser);
-        else reject(new Error('ZXing global not exposed'));
-      };
-      s.onerror = () => { zxingPromise = null; reject(new Error('Failed to load scanner library')); };
-      document.head.appendChild(s);
-    });
-    return zxingPromise;
-  }
-
-  async function maybeHideScanButton() {
-    const btn = document.getElementById('scanBtn');
-    if (!btn) return;
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      btn.setAttribute('hidden', '');
-      return;
-    }
-    if (!navigator.mediaDevices.enumerateDevices) return;
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const hasCam = devices.some(d => d.kind === 'videoinput');
-      if (!hasCam) btn.setAttribute('hidden', '');
-    } catch (e) { /* keep visible */ }
-  }
-
-  function setScannerHint(text, warn) {
-    const el = document.getElementById('scannerHint');
-    el.textContent = text;
-    el.classList.toggle('warn', !!warn);
-  }
-  function flashHint(text, ms) {
-    setScannerHint(text, true);
-    clearTimeout(flashHint._t);
-    flashHint._t = setTimeout(() => setScannerHint('HOLD STEADY — SCANNING FOR CODE…', false), ms || 1800);
-  }
-  function updateScanCounter() {
-    const el = document.getElementById('scannerCounter');
-    el.textContent = `SCANNED: ${scanner.count}`;
-    el.classList.toggle('hidden', !scanner.continuous);
-  }
-
-  function showScannerError(err) {
-    const el = document.getElementById('scannerError');
-    const c = document.getElementById('scannerErrorContent');
-    let title = 'CAMERA ERROR';
-    let msg = (err && err.message) || 'Could not start the camera.';
-    let showRetry = true;
-    if (err && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError' || err.name === 'SecurityError')) {
-      title = 'PERMISSION DENIED';
-      msg = 'Camera access needed. Enable it in your browser settings and try again.';
-    } else if (err && (err.name === 'NotFoundError' || err.name === 'OverconstrainedError')) {
-      title = 'NO CAMERA FOUND';
-      msg = 'No usable camera was detected on this device.';
-      showRetry = false;
-    } else if (err && err.name === 'NotReadableError') {
-      title = 'CAMERA BUSY';
-      msg = 'The camera is in use by another app. Close it and try again.';
-    }
-    c.innerHTML = `
-      <h4>${escapeHtml(title)}</h4>
-      <div>${escapeHtml(msg)}</div>
-      <div class="scanner-error-actions">
-        <button id="scanErrCloseBtn">CLOSE</button>
-        ${showRetry ? '<button id="scanErrRetryBtn" class="primary">RETRY</button>' : ''}
-      </div>
-    `;
-    el.classList.add('show');
-    document.getElementById('scanErrCloseBtn').onclick = closeScanner;
-    if (showRetry) {
-      document.getElementById('scanErrRetryBtn').onclick = () => {
-        el.classList.remove('show');
-        startCamera();
-      };
-    }
-  }
-
-  async function startCamera() {
-    document.getElementById('scannerLoading').classList.add('show');
-    try {
-      const ZX = await loadZXing();
-      if (!scanner.reader) {
-        let hints;
-        try {
-          hints = new Map();
-          if (ZX.BarcodeFormat && ZX.DecodeHintType) {
-            const fmts = [
-              ZX.BarcodeFormat.CODE_128,
-              ZX.BarcodeFormat.CODE_39,
-              ZX.BarcodeFormat.EAN_13,
-              ZX.BarcodeFormat.EAN_8,
-              ZX.BarcodeFormat.QR_CODE,
-              ZX.BarcodeFormat.DATA_MATRIX,
-            ].filter(f => f !== undefined && f !== null);
-            if (fmts.length) hints.set(ZX.DecodeHintType.POSSIBLE_FORMATS, fmts);
-          }
-        } catch(e) { hints = undefined; }
-        scanner.reader = new ZX.BrowserMultiFormatReader(hints);
-      }
-      const video = document.getElementById('scannerVideo');
-      const constraints = { video: { facingMode: { ideal: 'environment' } } };
-      scanner.controls = await scanner.reader.decodeFromConstraints(
-        constraints,
-        video,
-        (result, err, controls) => {
-          if (result && scanner.open) handleScanResult(result.getText());
-        }
-      );
-      document.getElementById('scannerLoading').classList.remove('show');
-      setupTorchButton();
-    } catch (err) {
-      document.getElementById('scannerLoading').classList.remove('show');
-      console.warn('camera error', err);
-      showScannerError(err);
-    }
-  }
-
-  function setupTorchButton() {
-    const torchBtn = document.getElementById('scannerTorch');
-    torchBtn.setAttribute('hidden', '');
-    torchBtn.classList.remove('on');
-    scanner.torchOn = false;
-    const video = document.getElementById('scannerVideo');
-    const probe = () => {
-      try {
-        const stream = video.srcObject;
-        if (!stream) return;
-        const track = stream.getVideoTracks()[0];
-        if (!track) return;
-        scanner.track = track;
-        const caps = (track.getCapabilities && track.getCapabilities()) || {};
-        if (caps.torch) torchBtn.removeAttribute('hidden');
-      } catch(e) {}
-    };
-    if (video.readyState >= 1 && video.srcObject) probe();
-    else video.addEventListener('loadedmetadata', probe, { once: true });
-  }
-
-  function toggleTorch() {
-    const t = scanner.track;
-    if (!t || !t.applyConstraints) return;
-    const next = !scanner.torchOn;
-    t.applyConstraints({ advanced: [{ torch: next }] }).then(() => {
-      scanner.torchOn = next;
-      document.getElementById('scannerTorch').classList.toggle('on', next);
-    }).catch(() => {
-      toast('TORCH UNAVAILABLE', 'warn');
-    });
-  }
-
-  function openScanner() {
-    if (scanner.open) return;
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      toast('CAMERA NOT SUPPORTED', 'warn');
-      return;
-    }
-    scanner.open = true;
-    scanner.count = 0;
-    scanner.lastCode = '';
-    scanner.lastTime = 0;
-    document.getElementById('scannerError').classList.remove('show');
-    setScannerHint('HOLD STEADY — SCANNING FOR CODE…', false);
-    updateScanCounter();
-    document.getElementById('scannerOverlay').classList.add('open');
-    document.getElementById('scannerOverlay').setAttribute('aria-hidden', 'false');
-    startCamera();
-  }
-
-  function closeScanner() {
-    scanner.open = false;
-    clearTimeout(flashHint._t);
-    const overlay = document.getElementById('scannerOverlay');
-    overlay.classList.remove('open');
-    overlay.setAttribute('aria-hidden', 'true');
-    document.getElementById('scannerError').classList.remove('show');
-    document.getElementById('scannerLoading').classList.remove('show');
-    if (scanner.controls) {
-      try { scanner.controls.stop(); } catch(e) {}
-      scanner.controls = null;
-    }
-    const video = document.getElementById('scannerVideo');
-    if (video.srcObject) {
-      try { video.srcObject.getTracks().forEach(t => t.stop()); } catch(e) {}
-      video.srcObject = null;
-    }
-    scanner.track = null;
-    scanner.torchOn = false;
-  }
-
-  function handleScanResult(rawText) {
-    if (!rawText) return;
-    const code = String(rawText).trim().toUpperCase().replace(/[^A-Z0-9_\-]/g, '');
-    if (!code) return;
-
-    const now = Date.now();
-    if (code === scanner.lastCode && (now - scanner.lastTime) < 1300) return;
-    scanner.lastCode = code;
-    scanner.lastTime = now;
-
-    vibrate(80, { force: true });
-    beep(440, 80, { force: true });
-
-    if (scanner.continuous) {
-      if (!state.initials) { flashHint('SET INITIALS IN SETTINGS FIRST'); return; }
-      const loc = getCurrentLoc();
-      if (!loc) { flashHint('NEED LOCATION FIRST — CLOSE & SET IT'); return; }
-      const entry = submitEntry({ code, qty: 1 });
-      if (entry) {
-        scanner.count++;
-        updateScanCounter();
-        flashHint(`LOGGED: ${code}`, 1100);
-      }
-    } else {
-      closeScanner();
-      const codeInput = document.getElementById('codeInput');
-      codeInput.value = code;
-      if (getCurrentLoc() && state.initials) {
-        submitEntry();
-      } else {
-        toast('SCANNED — NOW SET LOCATION', 'in');
-        codeInput.focus();
-      }
-    }
-  }
-
-  // -------- INIT --------
-  load();
-  setupRecognition();
-  applySettings();
-  bind();
-  renderAll();
-  updateNetStatus();
-  maybeHideScanButton();
-  window.addEventListener('online', updateNetStatus);
-  window.addEventListener('offline', updateNetStatus);
-
-  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./service-worker.js').catch(err => {
-        console.warn('SW registration failed', err);
-      });
-    });
-  }
-
-  if (!state.initials) {
-    setTimeout(openSettings, 300);
-  }
-})();
-</script>
 </body>
 </html>
