@@ -1,12 +1,14 @@
 /* Stock Count — service worker
    Cache-first strategy with runtime caching for Google Fonts. */
 
-const CACHE = 'stock-count-v1';
+const CACHE = 'stock-count-v2';
 const FONTS_CSS = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap';
 
 const PRECACHE = [
   './',
   './stocktake.html',
+  './stocktake.css',
+  './stocktake.js',
   './manifest.json',
   './icon.svg',
   FONTS_CSS,
